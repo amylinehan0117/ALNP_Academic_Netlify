@@ -1,0 +1,110 @@
+---
+title: Common Table Expressions in SQL
+author: Amy
+date: '2020-04-13'
+slug: common-table-expressions-in-sql
+categories: []
+tags:
+  - SQL
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-13T14:55:25-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Common Table Expressions (CTE)
+
+CTEs are shortcuts you can build into your SQL scripts to help simplify and condense your analyses. In particular, they help simplify complex subqueries and joins in scripts. Introduced in 2005 in SQL, Microsoft's descriptoin of CTE is: "Specifies a temporary named result set, known as a common table expression (CTE). This is derived from a simple query and defined within the execution scope of a single SELECT, INSERT, UPDATE, DELETE or MERGE statement" (source: <https://docs.microsoft.com/en-us/sql/t-sql/queries/with-common-table-expression-transact-sql?view=sql-server-ver15>). CTEs are also extremly useful if you're working in a program that only allows you to run a single query at a time. In these instances, declaring a CTE and then calling it in a select or join query is really helpful to simplify queries and processess. I'll dive into some examples now that will hopefully clarify the syntax and use of these expressions. 
+
+# Syntax 
+A simple example of a CTE is as follows. Let's say you have sales data of how much a store sold in an online store. The data is from <https://www.kaggle.com/vijayuv/onlineretail>. 
+
+```{r}
+library(DBI)
+db = dbConnect(odbc::odbc(), 
+               Driver = "SQL Server",
+               Server = "LAALINEHAN\\SQLEXPRESS",
+               Database = "alinehan",
+               Trusted_connection = "True")
+```
+
+```{sql, connection = db}
+select top 10 * 
+from dbo.retail_sales
+```
+
+For a simple example just to grasp the syntax, imagine you want to only select item with Stock Code = 22423 and then perform a wide variety of calculations on that sub-population without creating new temp tables or tables.
+
+
+```{sql, connection = db}
+with cakestand_sales as (
+  select top 10 *
+  from dbo.retail_sales
+  where StockCode = '22423'
+)
+select * 
+from cakestand_sales
+```
+
+Now, let's say you want to calculate the average amount of each item sold per day and compare that to the number sold in a particular sale and you want to do this in one query. 
+
+```{sql, connection = db}
+
+with avg_quantity as (
+SELECT InvoiceDate, StockCode, avg(Quantity) as avg_quantity
+FROM DBO.RETAIL_SALES
+GROUP BY InvoiceDate, StockCode
+)
+select a.InvoiceDate,a.InvoiceNo, a.StockCode, a.Quantity daily_quantity, b.avg_quantity, abs(a.Quantity - b.avg_quantity) difference
+from dbo.retail_sales a 
+left join avg_quantity b 
+on a.stockCode  = b.stockCode and a.InvoiceDate = b.InvoiceDate
+
+```
+
+In these two examples, we build one CTE and then applied it to a query. However, you can build as many as you want. Let's take our previous query but say we also want to add two columns indicating the max and min quantities sold in a day for all products across the store. Then, we could write the following query: 
+
+
+```{sql, connection = db}
+with avg_quantity as (
+SELECT InvoiceDate, StockCode, avg(Quantity) as avg_quantity
+FROM DBO.RETAIL_SALES
+GROUP BY InvoiceDate, StockCode
+),
+min_max_all_products as (
+
+SELECT InvoiceDate, max(Quantity) as max_quantity, min(Quantity) as min_quantity
+FROM dbo.retail_sales 
+group by InvoiceDate
+
+)
+select a.InvoiceDate,a.InvoiceNo, a.StockCode, a.Quantity daily_quantity, b.avg_quantity, abs(a.Quantity - b.avg_quantity) difference, c.max_quantity, c.min_quantity
+from dbo.retail_sales a 
+left join avg_quantity b 
+on a.stockCode  = b.stockCode and a.InvoiceDate = b.InvoiceDate
+left join min_max_all_products c 
+on a.InvoiceDate = c.InvoiceDate
+
+
+```
+
+
+
+
+
+
+
+
+
+

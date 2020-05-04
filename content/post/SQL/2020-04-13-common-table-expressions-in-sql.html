@@ -1,0 +1,533 @@
+---
+title: Common Table Expressions in SQL
+author: Amy
+date: '2020-04-13'
+slug: common-table-expressions-in-sql
+categories: []
+tags:
+  - SQL
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-13T14:55:25-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<div id="common-table-expressions-cte" class="section level2">
+<h2>Common Table Expressions (CTE)</h2>
+<p>CTEs are shortcuts you can build into your SQL scripts to help simplify and condense your analyses. In particular, they help simplify complex subqueries and joins in scripts. Introduced in 2005 in SQL, Microsoft’s descriptoin of CTE is: “Specifies a temporary named result set, known as a common table expression (CTE). This is derived from a simple query and defined within the execution scope of a single SELECT, INSERT, UPDATE, DELETE or MERGE statement” (source: <a href="https://docs.microsoft.com/en-us/sql/t-sql/queries/with-common-table-expression-transact-sql?view=sql-server-ver15" class="uri">https://docs.microsoft.com/en-us/sql/t-sql/queries/with-common-table-expression-transact-sql?view=sql-server-ver15</a>). CTEs are also extremly useful if you’re working in a program that only allows you to run a single query at a time. In these instances, declaring a CTE and then calling it in a select or join query is really helpful to simplify queries and processess. I’ll dive into some examples now that will hopefully clarify the syntax and use of these expressions.</p>
+</div>
+<div id="syntax" class="section level1">
+<h1>Syntax</h1>
+<p>A simple example of a CTE is as follows. Let’s say you have sales data of how much a store sold in an online store. The data is from <a href="https://www.kaggle.com/vijayuv/onlineretail" class="uri">https://www.kaggle.com/vijayuv/onlineretail</a>.</p>
+<pre class="r"><code>library(DBI)</code></pre>
+<pre><code>## Warning: package &#39;DBI&#39; was built under R version 3.6.2</code></pre>
+<pre class="r"><code>db = dbConnect(odbc::odbc(), 
+               Driver = &quot;SQL Server&quot;,
+               Server = &quot;LAALINEHAN\\SQLEXPRESS&quot;,
+               Database = &quot;alinehan&quot;,
+               Trusted_connection = &quot;True&quot;)</code></pre>
+<pre class="sql"><code>select top 10 * 
+from dbo.retail_sales</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 1: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="left">InvoiceNo</th>
+<th align="left">StockCode</th>
+<th align="left">Description</th>
+<th align="right">Quantity</th>
+<th align="left">InvoiceDate</th>
+<th align="right">UnitPrice</th>
+<th align="right">CustomerID</th>
+<th align="left">Country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">536365</td>
+<td align="left">85123A</td>
+<td align="left">WHITE HANGING HEART T-LIGHT HOLDER</td>
+<td align="right">6</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">2.55</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536365</td>
+<td align="left">71053</td>
+<td align="left">WHITE METAL LANTERN</td>
+<td align="right">6</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">3.39</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">536365</td>
+<td align="left">84406B</td>
+<td align="left">CREAM CUPID HEARTS COAT HANGER</td>
+<td align="right">8</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">2.75</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536365</td>
+<td align="left">84029G</td>
+<td align="left">KNITTED UNION FLAG HOT WATER BOTTLE</td>
+<td align="right">6</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">3.39</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">536365</td>
+<td align="left">84029E</td>
+<td align="left">RED WOOLLY HOTTIE WHITE HEART.</td>
+<td align="right">6</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">3.39</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536365</td>
+<td align="left">22752</td>
+<td align="left">SET 7 BABUSHKA NESTING BOXES</td>
+<td align="right">2</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">7.65</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">536365</td>
+<td align="left">21730</td>
+<td align="left">GLASS STAR FROSTED T-LIGHT HOLDER</td>
+<td align="right">6</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">4.25</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536366</td>
+<td align="left">22633</td>
+<td align="left">HAND WARMER UNION JACK</td>
+<td align="right">6</td>
+<td align="left">2010-12-01 08:28:00.0000000</td>
+<td align="right">1.85</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">536366</td>
+<td align="left">22632</td>
+<td align="left">HAND WARMER RED POLKA DOT</td>
+<td align="right">6</td>
+<td align="left">2010-12-01 08:28:00.0000000</td>
+<td align="right">1.85</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536367</td>
+<td align="left">84879</td>
+<td align="left">ASSORTED COLOUR BIRD ORNAMENT</td>
+<td align="right">32</td>
+<td align="left">2010-12-01 08:34:00.0000000</td>
+<td align="right">1.69</td>
+<td align="right">13047</td>
+<td align="left">United Kingdom</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For a simple example just to grasp the syntax, imagine you want to only select item with Stock Code = 22423 and then perform a wide variety of calculations on that sub-population without creating new temp tables or tables.</p>
+<pre class="sql"><code>with cakestand_sales as (
+  select top 10 *
+  from dbo.retail_sales
+  where StockCode = &#39;22423&#39;
+)
+select * 
+from cakestand_sales</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-3">Table 2: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="left">InvoiceNo</th>
+<th align="left">StockCode</th>
+<th align="left">Description</th>
+<th align="right">Quantity</th>
+<th align="left">InvoiceDate</th>
+<th align="right">UnitPrice</th>
+<th align="right">CustomerID</th>
+<th align="left">Country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">536477</td>
+<td align="left">22423</td>
+<td align="left">REGENCY CAKESTAND 3 TIER</td>
+<td align="right">16</td>
+<td align="left">2010-12-01 12:27:00.0000000</td>
+<td align="right">10.95</td>
+<td align="right">16210</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536502</td>
+<td align="left">22423</td>
+<td align="left">REGENCY CAKESTAND 3 TIER</td>
+<td align="right">2</td>
+<td align="left">2010-12-01 12:36:00.0000000</td>
+<td align="right">12.75</td>
+<td align="right">16552</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">536525</td>
+<td align="left">22423</td>
+<td align="left">REGENCY CAKESTAND 3 TIER</td>
+<td align="right">2</td>
+<td align="left">2010-12-01 12:54:00.0000000</td>
+<td align="right">12.75</td>
+<td align="right">14078</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536528</td>
+<td align="left">22423</td>
+<td align="left">REGENCY CAKESTAND 3 TIER</td>
+<td align="right">1</td>
+<td align="left">2010-12-01 13:17:00.0000000</td>
+<td align="right">12.75</td>
+<td align="right">15525</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">536530</td>
+<td align="left">22423</td>
+<td align="left">REGENCY CAKESTAND 3 TIER</td>
+<td align="right">1</td>
+<td align="left">2010-12-01 13:21:00.0000000</td>
+<td align="right">12.75</td>
+<td align="right">17905</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536537</td>
+<td align="left">22423</td>
+<td align="left">REGENCY CAKESTAND 3 TIER</td>
+<td align="right">2</td>
+<td align="left">2010-12-01 13:51:00.0000000</td>
+<td align="right">12.75</td>
+<td align="right">15922</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">536539</td>
+<td align="left">22423</td>
+<td align="left">REGENCY CAKESTAND 3 TIER</td>
+<td align="right">2</td>
+<td align="left">2010-12-01 14:03:00.0000000</td>
+<td align="right">12.75</td>
+<td align="right">15165</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536544</td>
+<td align="left">22423</td>
+<td align="left">REGENCY CAKESTAND 3 TIER</td>
+<td align="right">40</td>
+<td align="left">2010-12-01 14:32:00.0000000</td>
+<td align="right">12.72</td>
+<td align="right">NA</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">536562</td>
+<td align="left">22423</td>
+<td align="left">REGENCY CAKESTAND 3 TIER</td>
+<td align="right">2</td>
+<td align="left">2010-12-01 15:08:00.0000000</td>
+<td align="right">12.75</td>
+<td align="right">13468</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536592</td>
+<td align="left">22423</td>
+<td align="left">REGENCY CAKESTAND 3 TIER</td>
+<td align="right">47</td>
+<td align="left">2010-12-01 17:06:00.0000000</td>
+<td align="right">12.72</td>
+<td align="right">NA</td>
+<td align="left">United Kingdom</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Now, let’s say you want to calculate the average amount of each item sold per day and compare that to the number sold in a particular sale and you want to do this in one query.</p>
+<pre class="sql"><code>
+with avg_quantity as (
+SELECT InvoiceDate, StockCode, avg(Quantity) as avg_quantity
+FROM DBO.RETAIL_SALES
+GROUP BY InvoiceDate, StockCode
+)
+select a.InvoiceDate,a.InvoiceNo, a.StockCode, a.Quantity daily_quantity, b.avg_quantity, abs(a.Quantity - b.avg_quantity) difference
+from dbo.retail_sales a 
+left join avg_quantity b 
+on a.stockCode  = b.stockCode and a.InvoiceDate = b.InvoiceDate
+</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-4">Table 3: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="left">InvoiceDate</th>
+<th align="left">InvoiceNo</th>
+<th align="left">StockCode</th>
+<th align="right">daily_quantity</th>
+<th align="right">avg_quantity</th>
+<th align="right">difference</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">85123A</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">71053</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">84406B</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">84029G</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">84029E</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">22752</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">21730</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">2010-12-01 08:28:00.0000000</td>
+<td align="left">536366</td>
+<td align="left">22633</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">2010-12-01 08:28:00.0000000</td>
+<td align="left">536366</td>
+<td align="left">22632</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">2010-12-01 08:34:00.0000000</td>
+<td align="left">536367</td>
+<td align="left">84879</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In these two examples, we build one CTE and then applied it to a query. However, you can build as many as you want. Let’s take our previous query but say we also want to add two columns indicating the max and min quantities sold in a day for all products across the store. Then, we could write the following query:</p>
+<pre class="sql"><code>with avg_quantity as (
+SELECT InvoiceDate, StockCode, avg(Quantity) as avg_quantity
+FROM DBO.RETAIL_SALES
+GROUP BY InvoiceDate, StockCode
+),
+min_max_all_products as (
+
+SELECT InvoiceDate, max(Quantity) as max_quantity, min(Quantity) as min_quantity
+FROM dbo.retail_sales 
+group by InvoiceDate
+
+)
+select a.InvoiceDate,a.InvoiceNo, a.StockCode, a.Quantity daily_quantity, b.avg_quantity, abs(a.Quantity - b.avg_quantity) difference, c.max_quantity, c.min_quantity
+from dbo.retail_sales a 
+left join avg_quantity b 
+on a.stockCode  = b.stockCode and a.InvoiceDate = b.InvoiceDate
+left join min_max_all_products c 
+on a.InvoiceDate = c.InvoiceDate
+</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-5">Table 4: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="left">InvoiceDate</th>
+<th align="left">InvoiceNo</th>
+<th align="left">StockCode</th>
+<th align="right">daily_quantity</th>
+<th align="right">avg_quantity</th>
+<th align="right">difference</th>
+<th align="right">max_quantity</th>
+<th align="right">min_quantity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">85123A</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">71053</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">84406B</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">84029G</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">84029E</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">22752</td>
+<td align="right">2</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="left">536365</td>
+<td align="left">21730</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">8</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">2010-12-01 08:28:00.0000000</td>
+<td align="left">536366</td>
+<td align="left">22633</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">6</td>
+</tr>
+<tr class="odd">
+<td align="left">2010-12-01 08:28:00.0000000</td>
+<td align="left">536366</td>
+<td align="left">22632</td>
+<td align="right">6</td>
+<td align="right">6</td>
+<td align="right">0</td>
+<td align="right">6</td>
+<td align="right">6</td>
+</tr>
+<tr class="even">
+<td align="left">2010-12-01 08:34:00.0000000</td>
+<td align="left">536367</td>
+<td align="left">84879</td>
+<td align="right">32</td>
+<td align="right">32</td>
+<td align="right">0</td>
+<td align="right">32</td>
+<td align="right">2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>

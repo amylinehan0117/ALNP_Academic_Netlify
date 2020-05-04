@@ -1,0 +1,105 @@
+---
+title: data.table Joins
+author: alinehan
+date: '2020-04-03'
+slug: data-table-joins
+categories: ["R"]
+tags: ["R"]
+subtitle: ''
+summary: ''
+authors: ["alinehan"]
+lastmod: '2020-04-03T13:01:16-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+Although I've used the data.table package regularly for almost two years now, I still find myself converting my objects into data frames for joins. Part of this is definitely just laziness, so I figured writing about joins in data.table would help me understand and remember the syntax better moving forward.
+
+I'm going to rely on the mtcars dataset and a made-up data set of people's cars to demonstrate the different types of joins:
+
+```{r}
+require(dplyr)
+require(data.table)
+
+cars <- mtcars %>% tibble::rownames_to_column(var="car_type") %>% select(car_type, mpg) %>% as.data.table()
+head(cars)
+
+friends <- c("Nicholas", "Drake", "JP", "Lily")
+cars_models <- c("Ferrari Dino", "Honda Civic", "Fiat X1-9", "Smart Car")
+
+friends_cars <- data.frame(friends,cars_models) %>%
+  mutate_at(vars(friends, cars_models), 
+            funs(as.character)) %>% as.data.table()
+
+head(friends_cars)
+
+```
+ 
+
+# Types of Joins
+
+Data.table joins are based on the same premise as SQL joins. The syntax of data.table joins is very simple:
+
+
+Join Type | Syntax
+Left Join  | Y[X]
+Right Join  | X[Y,]
+Inner Join | X[Y, nomatch=0]
+
+
+# Set Key
+
+Unlike joining using dplyr or merge, data.table joins determined the on/using clause by setting the keys of the table using the setkey() function. This honestly is the part that turns me off using data.table joins regularly because I always forgot to do this. But, it is a quick and simple step.
+
+For our example, we are going to join on the car_type in the cars data.table and the cars_models in the friends_cars table. So, we set the key for these fields (unsure if that's the technical language but hopefully y'all follow me):
+
+
+```{r}
+setkey(cars,car_type)
+
+setkey(friends_cars, cars_models)
+
+# left join
+cars[friends_cars,]
+
+# right join 
+friends_cars[cars,]
+```
+
+That left join was so simple that honestly if you're reading through the script you may not even know it's a join. The only syntax difference that stands out to me besides no "on" parameter is that in SQL and dplyr, the first table in a left join is listed first whereas here, the first table is listed second, inside the brackets.
+
+Now, let's see how the nomatch parameter impacts the joins. Once again, I find this detail hard to follow/identify as a join but once you get the hang of it, it is super useful. My understanding of the nomatch parameter is that when you set nomatch=0, the returned output from the join is limited to the records that match on the set key. So, in our example above, we would only expect 3 records to return on our left join since Smart Car is not in the cars data.table (we know that because in our example above, the mpg field's value for Smart Car is NA). 
+
+If you've used joins in other programming languages or in R with merge or dplyr, you'll realize quickly that what I have just described, only returning the matched records, is actually just an inner join. 
+
+```{r}
+# left join with nomatch (inner join)
+cars[friends_cars,nomatch=0]
+ 
+friends_cars[cars,nomatch=0]
+
+```
+
+
+The only difference between the two joins above is simply the order of the output. This is something I've noticed that honestly I don't like about data.table joins. But also if we're being truthful I'm constantly re-ordering my data just to suit my own personal preferences even when it has zero impact on the analysis. Just my personal pet peeve! 
+
+
+Great source that I relied on/has more information : <https://rstudio-pubs-static.s3.amazonaws.com/52230_5ae0d25125b544caab32f75f0360e775.html> 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

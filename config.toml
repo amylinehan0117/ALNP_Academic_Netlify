@@ -1,7 +1,167 @@
-# Academic Website Builder
-# https://sourcethemes.com/academic/
+# Configuration of Academic
+# Documentation: https://sourcethemes.com/academic/
 #
-# The presence of this file is for compatibility with Blogdown and Forestry.
-# If you are not using those tools, this file may be deleted.
-#
-# The actual configuration files are stored in the `config/_default/` folder.
+# This file is formatted using TOML syntax - learn more at https://learnxinyminutes.com/docs/toml/
+# Each configuration section is defined by a name in square brackets (e.g. `[outputs]`).
+
+# Title of your site
+title = "Debugging Data"
+
+# The URL of your site.
+# End your URL with a `/` trailing slash, e.g. `https://example.com/`.
+baseurl = "/"
+
+# Enter a copyright notice to display in the site footer.
+# To display a copyright symbol, type `&copy;`. For current year, type `{year}`.
+copyright = ""
+
+############################
+## Advanced options below ##
+############################
+
+# Name of Academic theme folder in `themes/`.
+theme = "academic"
+
+# Get last modified date for content from Git?
+enableGitInfo = false
+
+# Default language to use (if you setup multilingual support)
+defaultContentLanguage = "en"
+hasCJKLanguage = false  # Set `true` for Chinese/Japanese/Korean languages.
+defaultContentLanguageInSubdir = false
+removePathAccents = true  # Workaround for https://github.com/gohugoio/hugo/issues/5687
+
+summaryLength = 30  # Listing summary length in words. Also, see `abstract_length` in `params.toml`.
+paginate = 10  # Number of items per page in paginated lists.
+enableEmoji = true
+footnotereturnlinkcontents = "<sup>^</sup>"
+ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+
+
+[params]
+  name = "Amy Linehan and Nellie Ponarul"
+  description = "A site about our adventures in data"
+  role = ""
+  organization = ""
+  organization_url = ""
+  #avatar = "aph-salt-spring-zoom.jpg"
+  email = "alinehan1995@gmail.com"
+  twitter = ""
+  github = ""
+
+
+  # Date format (refer to Go's date format: http://flippinggodateformat.com )
+  #   Examples: "Mon, Jan 2, 2006" or "2006-01-02"
+  date_format = "Mon, Jan 2, 2006"
+
+  # Enable global LaTeX math rendering?
+  #   If false, you can enable it locally on a per page basis.
+  math = false
+
+
+  highlight = true
+  highlight_languages = ["r", "yaml"]
+  highlight_style = "atelier-cave-light"
+  highlight_version = "9.12.0"
+
+  # Enable native social sharing buttons?
+  sharing = true
+
+  # Link custom CSS and JS assets
+  #   (relative to /static/css and /static/js respectively)
+  custom_css = ["blue.css"]
+  custom_js  = []
+
+  # Publication types.
+  #   Used to categorize publications.
+  #   The index of the publication type in the list is used as its unique numerical identifier.
+  #   The numeric ID is used in a publication's frontmatter to categorize it.
+  #   The language can be edited below.
+  #   For multi-lingual sites, copy this block to each language section at the end of this file.
+  publication_types = [
+    'Uncategorized',  # 0
+    'Conference proceedings',  # 1
+    'Journal',  # 2
+    'Work in progress',  # 3
+    'Technical report',  # 4
+    'Book',  # 5
+    'Book chapter'  # 6
+  ]
+
+
+  [[params.social]]
+    icon = "linkedin"
+    icon_pack = "fa"
+    link = "https://www.linkedin.com/in/nellie-ponarul-31944aa0/"
+
+
+  [[params.social]]
+    icon = "linkedin"
+    icon_pack = "fa"
+    link = "https://www.linkedin.com/in/amy-linehan-7634bb92/"
+
+# Navigation Links
+#   To link a homepage widget, specify the URL as a hash `#` followed by the filename of the
+#     desired widget in your `content/home/` folder.
+#   The weight parameter defines the order that the links will appear in.
+
+[[menu.main]]
+  name = "Home"
+  url = "#about"
+  weight = 1
+
+
+[[menu.main]]
+  name = "Posts"
+  url = "#posts"
+  weight = 2
+
+[[menu.main]]
+  name = "R Posts"
+  url = "#R"
+  weight = 3
+
+[[menu.main]]
+  name = "SQL Posts"
+  url = "#posts"
+  weight = 4
+
+[[menu.main]]
+  name = "Other Posts"
+  url = "#posts"
+  weight = 5
+
+
+[outputs]
+  home = [ "HTML", "RSS", "JSON", "WebAppManifest" ]
+  section = [ "HTML", "RSS" ]
+
+[mediaTypes."application/manifest+json"]
+  suffixes = ["webmanifest"]
+
+[outputFormats.WebAppManifest]
+  mediaType = "application/manifest+json"
+  rel = "manifest"
+
+[markup]
+  defaultMarkdownHandler = "goldmark"
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true  # Enable user to embed HTML snippets in Markdown content.
+  [markup.highlight]
+    codeFences = false  # Disable Hugo's code highlighter as it conflicts with Academic's highligher.
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+
+[imaging]
+  resampleFilter = "lanczos"
+  quality = 90
+  anchor = "smart"  # Anchor for cropping. Options include Smart and Center.
+
+# Taxonomies.
+[taxonomies]
+  tag = "tags"
+  category = "categories"
+  publication_type = "publication_types"
+  author = "authors"

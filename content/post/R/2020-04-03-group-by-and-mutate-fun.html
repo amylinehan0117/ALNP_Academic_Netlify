@@ -1,0 +1,67 @@
+---
+title: Group by and Mutate Fun
+author: alinehan
+date: '2020-04-03'
+slug: group-by-and-mutate-fun
+categories: ["R"]
+tags: ["R"]
+subtitle: ''
+summary: ''
+authors: ["alinehan"]
+lastmod: '2020-04-03T13:06:22-07:00'
+featured: yes
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<p>I wanted to write this post simply because I use this trick a lot and it’s not super complicated but for new programmers, this is often one of the first challenging tasks that can be made simple with dplyr and data.table.</p>
+<p>In this post, we’re going to use the following data and focus on ranking the ages of each student based on their location.</p>
+<pre class="r"><code>data&lt;-data.table(Location=c(&quot;Los Angeles&quot;,&quot;San Francisco&quot;,&quot;Los Angeles&quot;,&quot;New York&quot;,&quot;New York&quot;,&quot;New York&quot;,&quot;Los Angeles&quot;,&quot;New York&quot;,&quot;New York&quot;,&quot;Los Angeles&quot;),
+                 Age=c(13,24,13,24,25,18,17,4,29,13))
+
+
+print(data)</code></pre>
+<pre><code>##          Location Age
+##  1:   Los Angeles  13
+##  2: San Francisco  24
+##  3:   Los Angeles  13
+##  4:      New York  24
+##  5:      New York  25
+##  6:      New York  18
+##  7:   Los Angeles  17
+##  8:      New York   4
+##  9:      New York  29
+## 10:   Los Angeles  13</code></pre>
+<p>So first, let’s do this in dplyr:</p>
+<pre class="r"><code>data %&gt;% 
+  as.data.frame() %&gt;% 
+  group_by(Location) %&gt;% 
+  mutate(Location_Rank = 1:n()) %&gt;% 
+  arrange(Location, Location_Rank)</code></pre>
+<pre><code>## # A tibble: 10 x 3
+## # Groups:   Location [3]
+##    Location        Age Location_Rank
+##    &lt;chr&gt;         &lt;dbl&gt;         &lt;int&gt;
+##  1 Los Angeles      13             1
+##  2 Los Angeles      13             2
+##  3 Los Angeles      17             3
+##  4 Los Angeles      13             4
+##  5 New York         24             1
+##  6 New York         25             2
+##  7 New York         18             3
+##  8 New York          4             4
+##  9 New York         29             5
+## 10 San Francisco    24             1</code></pre>
+<p>This isn’t revolutionary but for the first couple weeks of consistently using the group by and summarize functions together to analysis/play around with data, it seemed crazy that you could use other functions with group by. So when I discovered that you could use mutate with group by it was really a gamer changer.</p>
+<p>As is common in my R blog posts, you can also do this in data.table!!!:</p>
+<pre class="r"><code>data &lt;- as.data.table(data)
+
+data[, Location_Rank := seq_len(.N), by = Location]
+data[, Location_Rank := rowid(Location)]</code></pre>
+<p>*** introduce example that has you flag and then cumsum
+or look above or below **********</p>

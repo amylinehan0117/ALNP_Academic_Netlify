@@ -1,0 +1,145 @@
+---
+title: Dplyr Functionality with Data.Table
+author: Amy
+date: '2020-04-10'
+slug: dplyr-functionality-with-data-table
+categories:
+  - R
+tags:
+  - R
+  - dplyr
+  - data.table
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-10T13:38:07-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<p>For the first year of my career as a consultant, my manager wrote his scripts in data.table and I somehow avoided ever having to really understand what the heck he was doing. It took a full year, but eventually I started understanding and using data.table in my scripts. Now, don’t get me wrong I’m definitely still a tidyverse girl and prefer ctrl+alt+m to brackets any day. But, I can’t deny that there are situations where using data table is faster, easier and cleaner.</p>
+<p>The goal of this post is to consolidate all the common dplyr code I rely on regularly and the corresponding translation in data.table. We’ll do another post that dives more into data.table and the pros/cons/tricks to it, but this is more of just a translator between popular dplyr functionalities and data.table. For this, I’ll just be using the standard mtcars dataset.</p>
+<ol style="list-style-type: decimal">
+<li>Mutate (add a new flag indicating if mpg is over 20)</li>
+</ol>
+<pre class="r"><code>require(dplyr)</code></pre>
+<pre><code>## Loading required package: dplyr</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre class="r"><code>require(data.table)</code></pre>
+<pre><code>## Loading required package: data.table</code></pre>
+<pre><code>## 
+## Attaching package: &#39;data.table&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
+## 
+##     between, first, last</code></pre>
+<pre class="r"><code>cars &lt;- mtcars %&gt;% tibble::rownames_to_column(var=&quot;car_type&quot;)
+
+#dplyr
+data_dplyr &lt;- as.data.frame(cars) %&gt;% 
+                  mutate(eco_flg = mpg &gt; 20 )
+  # data.table 
+  data_dt &lt;- as.data.table(cars)
+data_dt[,eco_flg:=F]
+data_dt &lt;- data_dt[mpg&gt;20,eco_flg:=T]</code></pre>
+<div id="summarise-and-count-by-a-field" class="section level1">
+<h1>2. Summarise and count by a field</h1>
+<pre class="r"><code># dplyr
+data_dplyr %&gt;% group_by(eco_flg) %&gt;% count()</code></pre>
+<pre><code>## # A tibble: 2 x 2
+## # Groups:   eco_flg [2]
+##   eco_flg     n
+##   &lt;lgl&gt;   &lt;int&gt;
+## 1 FALSE      18
+## 2 TRUE       14</code></pre>
+<pre class="r"><code># data.table 
+data_dt[,.N,by=eco_flg]</code></pre>
+<pre><code>##    eco_flg  N
+## 1:    TRUE 14
+## 2:   FALSE 18</code></pre>
+</div>
+<div id="group-by-summarise-the-average" class="section level1">
+<h1>3. Group by &amp; summarise the average</h1>
+<pre class="r"><code># dplyr
+data_dplyr %&gt;% group_by(eco_flg, gear) %&gt;% summarise(avg_hp = mean(hp))</code></pre>
+<pre><code>## # A tibble: 6 x 3
+## # Groups:   eco_flg [2]
+##   eco_flg  gear avg_hp
+##   &lt;lgl&gt;   &lt;dbl&gt;  &lt;dbl&gt;
+## 1 FALSE       3  187. 
+## 2 FALSE       4  123  
+## 3 FALSE       5  258  
+## 4 TRUE        3  104. 
+## 5 TRUE        4   82.8
+## 6 TRUE        5  102</code></pre>
+<pre class="r"><code># data.table 
+data_dt[,list(avg_hp= mean(hp)),by=list(eco_flg,gear)]</code></pre>
+<pre><code>##    eco_flg gear   avg_hp
+## 1:    TRUE    4  82.8000
+## 2:    TRUE    3 103.5000
+## 3:   FALSE    3 187.3077
+## 4:   FALSE    4 123.0000
+## 5:    TRUE    5 102.0000
+## 6:   FALSE    5 258.0000</code></pre>
+</div>
+<div id="join-data" class="section level1">
+<h1>4. Join data</h1>
+<p>In this example, let’s build some sample data to join onto mtcars. Let’s say we want to pull data for our friends’ cars:</p>
+<pre class="r"><code>friends &lt;- c(&quot;Nellie&quot;, &quot;Drake&quot;, &quot;JP&quot;, &quot;Lily&quot;)
+cars &lt;- c(&quot;Ferrari Dino&quot;, &quot;Honda Civic&quot;, &quot;Fiat X1-9&quot;, &quot;Smart Car&quot;)
+
+friends_cars &lt;- data.frame(friends,cars) %&gt;%
+  mutate_at(vars(friends, cars), 
+            funs(as.character))</code></pre>
+<pre><code>## Warning: funs() is soft deprecated as of dplyr 0.8.0
+## Please use a list of either functions or lambdas: 
+## 
+##   # Simple named list: 
+##   list(mean = mean, median = median)
+## 
+##   # Auto named with `tibble::lst()`: 
+##   tibble::lst(mean, median)
+## 
+##   # Using lambdas
+##   list(~ mean(., trim = .2), ~ median(., na.rm = TRUE))
+## This warning is displayed once per session.</code></pre>
+<pre class="r"><code>head(friends_cars)</code></pre>
+<pre><code>##   friends         cars
+## 1  Nellie Ferrari Dino
+## 2   Drake  Honda Civic
+## 3      JP    Fiat X1-9
+## 4    Lily    Smart Car</code></pre>
+<p>First, let’s join mtcars onto friends using dplyr:</p>
+<pre class="r"><code>friends_cars %&gt;% left_join(data_dplyr, by = c(&quot;cars&quot;= &quot;car_type&quot;))</code></pre>
+<pre><code>##   friends         cars  mpg cyl  disp  hp drat    wt  qsec vs am gear carb
+## 1  Nellie Ferrari Dino 19.7   6 145.0 175 3.62 2.770 15.50  0  1    5    6
+## 2   Drake  Honda Civic 30.4   4  75.7  52 4.93 1.615 18.52  1  1    4    2
+## 3      JP    Fiat X1-9 27.3   4  79.0  66 4.08 1.935 18.90  1  1    4    1
+## 4    Lily    Smart Car   NA  NA    NA  NA   NA    NA    NA NA NA   NA   NA
+##   eco_flg
+## 1   FALSE
+## 2    TRUE
+## 3    TRUE
+## 4      NA</code></pre>
+<p>Now, let’s try the same join with data.table:</p>
+<pre class="r"><code>friends_cars &lt;- as.data.table(friends_cars)
+
+friends_cars[]</code></pre>
+<pre><code>##    friends         cars
+## 1:  Nellie Ferrari Dino
+## 2:   Drake  Honda Civic
+## 3:      JP    Fiat X1-9
+## 4:    Lily    Smart Car</code></pre>
+</div>

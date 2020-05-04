@@ -1,0 +1,117 @@
+---
+title: Column to Rows in Dplyr
+authors: ["alinehan"]
+date: '2020-02-18'
+slug: column-to-rows-in-dplyr
+categories: ["SQL"]
+tags: ["SQL"]
+subtitle: ''
+summary: ''
+lastmod: '2020-04-03T12:35:17-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+This week, I came across some data this week that was organized like this: 
+
+```{r, include=F}
+library(tidyverse)
+```
+
+
+```{r}
+
+
+df <- data.frame(groupid = c(0001,0002,0003,0004,0005), 
+                 userid = c("448,938,483,594,595",
+                            "121", "823", "765, 089", "120, 982, 843"))
+
+head(df)
+```
+
+Each group ID contained at least one user ID, but many groups contained multiple IDs. My goal was to use this data to join the group ID information onto each user ID data. So, I wanted to have a data set containing one record for each user ID and it's corresponding group ID.
+
+I started off thinking I'd separate the userid field by comma (like text-to-columns in Excel) which would make the data wide. And then,I'd use melt to make the data long. In R, the equivalent of text-to-columns is separate in tidyr. Separate is a really useful function and is very adaptable to your data. If you understand the various parameters in the functio, separate can be customized to fit your data/analysis.
+
+For this review of separate, I primarily relied on my own messing aroud and the Tidyr documentation for the function located here: <https://tidyr.tidyverse.org/reference/separate.html>. 
+
+Since I'm impatient and didn't read through the documentation, my first attempt at using this function was something along the lines of this: 
+
+```{r}
+#df %>% separate(userid)
+
+```
+
+Ok...that didn't work so now let's take a look at the documentation. The parameters for the function are:
+
+* **data:** the dataframe (df)
+
+
+* **col:** the column you want to break apart (userid)
+
+* **into:** names of the new variables that are created 
+  + If you want the columns returned, just put NA
+  
+* **sep:** the separator between columns (",")
+  + If the value is character, it's interpreted as a regular expression to identify where to separate the field
+  + If the value is numeric , it's intereted as the position to split at (positive values start at 1 on the LHS of the string, negative values start at -1 on the RHS of the string)
+  
+* **remove** If TRUE removes input column from the output df 
+
+* **convert** If TRUE, will convert the new columns (otherwise just character type fields)
+
+* **extra** If sep = character vector, then this parameters controls what happens when there are too many pieces. You have three options:
+  + "warn" (the default): emits a warning and drops extra values 
+  + "drop": drops any extra values w/out a warning 
+  + "merge": only splits at most length(into) times
+  
+* **fill** If sep = character vector, this controls what happens when there are not enough pieces. Similar to extra, you have three options: 
+  + "warn" (the default): emits a wrning and fills from the right 
+  + "right": fill with missing values on the right 
+  + "left": fill with missing values on the left
+
+Now, after reviewing this, I can update my code to: 
+
+
+```{r}
+df %>% separate(col=userid, sep =",", into= c("app_id") ,extra= "drop" )
+
+```
+
+These parameters only keep one app id per group id. That's not what I want for my purposes so I'm going to add multiple fields in the into parameter:
+
+
+```{r}
+df %>% separate(col=userid, sep =",", into= c("app_id1", "app_id2","app_id3","app_id4","app_id5") ,extra= "warn" )
+
+```
+Yay that worked! 
+
+
+For our sample data, this initial approach wouldn't be too strenuous since we can easily see the maximum number of app ids to a single group id is 5 so our into parameter only needs five character strings.  However, my actual client data had up to 20 app ids per group id and was thousands of rows long so it was definitely more effort. As I started exploring this, I realized that it's likely someone has already done the hard work and figured out a function to solve this. 
+
+Anddd.... as usual the internet came through!  A quick Google search pointed me towards a tidyr function called separate_rows. This function does exactly what I was hoping to do and is really efficient and simple to use. 
+
+The tidyr documentation for this function is concise and helpful and what I relied on for this post. If you have any further questions about the details or functionality of separate_rows definitely check it out: <https://tidyr.tidyverse.org/reference/separate_rows.html>
+
+For my example, getting the data to a long, two-column set was super simple: 
+
+```{r}
+df %>% separate_rows(userid)
+
+```
+
+We can check to make sure all the user ids are still accouted for: 
+
+```{r}
+df %>% separate_rows(userid) %>% group_by(groupid) %>% count()
+
+```
+
+
+
+

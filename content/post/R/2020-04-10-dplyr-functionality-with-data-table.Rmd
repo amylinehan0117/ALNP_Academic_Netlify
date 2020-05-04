@@ -1,0 +1,104 @@
+---
+title: Dplyr Functionality with Data.Table
+author: Amy
+date: '2020-04-10'
+slug: dplyr-functionality-with-data-table
+categories:
+  - R
+tags:
+  - R
+  - dplyr
+  - data.table
+subtitle: ''
+summary: ''
+authors: []
+lastmod: '2020-04-10T13:38:07-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+For the first year of my career as a consultant, my manager wrote his scripts in data.table and I somehow avoided ever having to really understand what the heck he was doing. It took a full year, but eventually I started understanding and using data.table in my scripts. Now, don't get me wrong I'm definitely still a tidyverse girl and prefer ctrl+alt+m to brackets any day. But, I can't deny that there are situations where using data table is faster, easier and cleaner.
+
+The goal of this post is to consolidate all the common dplyr code I rely on regularly and the corresponding translation in data.table. We'll do another post that dives more into data.table and the pros/cons/tricks to it, but this is more of just a translator between popular dplyr functionalities and data.table. For this, I'll just be using the standard mtcars dataset. 
+
+1. Mutate (add a new flag indicating if mpg is over 20)
+
+```{r}
+require(dplyr)
+require(data.table)
+cars <- mtcars %>% tibble::rownames_to_column(var="car_type")
+
+#dplyr
+data_dplyr <- as.data.frame(cars) %>% 
+                  mutate(eco_flg = mpg > 20 )
+  # data.table 
+  data_dt <- as.data.table(cars)
+data_dt[,eco_flg:=F]
+data_dt <- data_dt[mpg>20,eco_flg:=T]
+
+```
+
+# 2. Summarise and count by a field 
+
+```{r}
+
+# dplyr
+data_dplyr %>% group_by(eco_flg) %>% count()
+
+# data.table 
+data_dt[,.N,by=eco_flg]
+
+```
+
+# 3. Group by & summarise the average 
+```{r}
+
+# dplyr
+data_dplyr %>% group_by(eco_flg, gear) %>% summarise(avg_hp = mean(hp))
+
+# data.table 
+data_dt[,list(avg_hp= mean(hp)),by=list(eco_flg,gear)]
+
+```
+
+
+# 4. Join data 
+
+In this example, let's build some sample data to join onto mtcars. Let's say we want to pull data for our friends' cars: 
+
+```{r}
+
+friends <- c("Nellie", "Drake", "JP", "Lily")
+cars <- c("Ferrari Dino", "Honda Civic", "Fiat X1-9", "Smart Car")
+
+friends_cars <- data.frame(friends,cars) %>%
+  mutate_at(vars(friends, cars), 
+            funs(as.character))
+
+head(friends_cars)
+
+```
+
+First, let's join mtcars onto friends using dplyr: 
+
+```{r}
+
+friends_cars %>% left_join(data_dplyr, by = c("cars"= "car_type"))
+
+```
+
+Now, let's try the same join with data.table: 
+
+```{r}
+
+friends_cars <- as.data.table(friends_cars)
+
+friends_cars[]
+
+```
