@@ -1,6 +1,11 @@
 ---
-authors: alinehan
-bio: UCLA graduate currently working as a Data & Analytics Consultant 
+# Display name 
+title: Amy Linehan
+
+# Username (should match folder name)
+authors: 
+- alinehan 
+
 education:
   courses:
   - course: BSc in Math/Economics 
@@ -8,8 +13,12 @@ education:
     year: 2017
 email: ''
 interests: 
-  - Currently working as a Data & Analytics consultant in Los Angeles, Amy graduated from UCLA with a degree in     Math/Economics. She can usually be found with a large amount of coffee nearby.
-#name: Amy Linehan
+  - Programming in R, SQL and Python
+  - Running, yoga & being outdoors 
+  - Rewatching The Office for the millionth time 
+  
+  
+name: Amy Linehan
 #organizations:[]
 #- name: []
 #  url: ''
@@ -31,4 +40,4 @@ superuser: yes
 user_groups: ["The Crew"]
 ---
 
-Amy's bio
+Currently working as a Data & Analytics consultant in Los Angeles, Amy graduated from UCLA with a degree in Math/Economics. She can usually be found with a large amount of coffee nearby.

@@ -137,6 +137,11 @@ ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "
   url = "#posts_other"
   weight = 6
 
+[[menu.main]]
+  name = "Contact Us"
+  url = "#contact"
+  weight = 7
+
 
 [outputs]
   home = [ "HTML", "RSS", "JSON", "WebAppManifest" ]

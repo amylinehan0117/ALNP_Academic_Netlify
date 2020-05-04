@@ -8,7 +8,7 @@ active = true  # Activate this widget? true/false
 weight = 2  # Order that this section will appear.
 
 title = "Meet Us!"
-subtitle = ""
+subtitle = "Amy Linehan & Nellie Ponarul"
 
 [content]
   # Choose which groups/teams of users to display.
@@ -20,7 +20,7 @@ subtitle = ""
   show_social = true
 
   # Show user's interests? (true/false)
-  show_interests = true
+  show_interests = false
 
 [design.background]
   # Apply a background color, gradient, or image.
@@ -40,7 +40,7 @@ subtitle = ""
   # image_darken = 0.6  # Darken the image? Range 0-1 where 0 is transparent and 1 is opaque.
 
   # Text color (true=light or false=dark).
-  # text_color_light = true  
+  text_color_light = false  
   
 [advanced]
  # Custom CSS. 

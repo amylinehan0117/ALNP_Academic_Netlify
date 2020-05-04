@@ -1,6 +1,10 @@
 ---
-authors: nponarul
-bio: '[]'
+# Display name 
+title: Nellie Ponarul
+
+# Username (should match folder name)
+authors: 
+- nponarul
 education:
   courses:
   - course: Masters in Public Health/Biostatics (Nellie)
@@ -11,8 +15,12 @@ education:
     year: 2017
 email: ''
 interests: 
-- Working towards a masters in something awesome that Amy can never remember  (biostats??) at Harvard University. Never far from a musical instrument or climbing wall.
-#name:  Nellie Ponarul
+  - Programming in R, SQL, Python, VBA and any other language that comes her way
+  - Plays the violin, ukele, piano (the list goes on) professionally and for fun! 
+  - Can usually be found with black coffee and a good book 
+
+
+name:  Nellie Ponarul
 #organizations:[]
 #- name: []
 #  url: ''
@@ -28,4 +36,5 @@ superuser: yes
 user_groups: ["The Crew"]
 ---
 
-nellie bio
+
+Nellie is working towards a masters in something awesome that Amy can never remember  (biostats??) at Harvard University. Never far from a musical instrument or climbing wall.
