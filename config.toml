@@ -112,24 +112,30 @@ ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "
 
 
 [[menu.main]]
+  name = "About Us"
+  url = "#people"
+  weight = 2
+
+
+[[menu.main]]
   name = "Posts"
   url = "#posts"
-  weight = 2
+  weight = 3
 
 [[menu.main]]
   name = "R Posts"
   url = "#R"
-  weight = 3
+  weight = 4
 
 [[menu.main]]
   name = "SQL Posts"
   url = "#posts"
-  weight = 4
+  weight = 5
 
 [[menu.main]]
   name = "Other Posts"
   url = "#posts"
-  weight = 5
+  weight = 6
 
 
 [outputs]
