@@ -14,15 +14,24 @@
   weight = 20
 
 [[main]]
-  name = "Posts"
+  name = "All Posts"
   url = "#posts"
   weight = 30
 
 [[main]]
-  name = "Analyses"
-  url = "#featured"
+  name = "R Posts"
+  url = "#posts_r"
   weight = 40
 
+[[main]]
+  name = "SQL Posts"
+  url = "#posts_sql"
+  weight = 50
+
+[[main]]
+  name = "Other Posts"
+  url = "#posts_other"
+  weight = 60
 
 # Link to a PDF of your resume/CV from the menu.
 # To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.
