@@ -1,30 +1,7 @@
 ---
 authors: admin
-bio: '[]'
-#education: '[]'
-email: ''
-# interests:
-# - Data Analytics in R, SQL and Python
-# - Analyses in relation to current events, public health and politics
-# - Trying new things with data and different programming languages
-#name: 
-#organizations:[]
-#- name: []
-#  url: ''
-#role: 
-# social:
-# - icon: envelope
-#   icon_pack: fas
-#   link: '#contact'
-# - icon: twitter
-#   icon_pack: fab
-#   link: https://twitter.com/GeorgeCushen
-# - icon: google-scholar
-#   icon_pack: ai
-#   link: https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ
-# - icon: github
-#   icon_pack: fab
-#   link: https://github.com/gcushen
+
+
 superuser: yes
 ---
 
