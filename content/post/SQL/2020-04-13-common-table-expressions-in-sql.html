@@ -1,6 +1,7 @@
 ---
 title: Common Table Expressions in SQL
-author: Amy
+author: Amy Linehan
+authors: ["alinehan"]
 date: '2020-04-13'
 slug: common-table-expressions-in-sql
 categories: []
@@ -8,7 +9,6 @@ tags:
   - SQL
 subtitle: ''
 summary: ''
-authors: []
 lastmod: '2020-04-13T14:55:25-07:00'
 featured: no
 image:
@@ -27,18 +27,11 @@ projects: []
 <div id="syntax" class="section level1">
 <h1>Syntax</h1>
 <p>A simple example of a CTE is as follows. Let’s say you have sales data of how much a store sold in an online store. The data is from <a href="https://www.kaggle.com/vijayuv/onlineretail" class="uri">https://www.kaggle.com/vijayuv/onlineretail</a>.</p>
-<pre class="r"><code>library(DBI)</code></pre>
-<pre><code>## Warning: package &#39;DBI&#39; was built under R version 3.6.2</code></pre>
-<pre class="r"><code>db = dbConnect(odbc::odbc(), 
-               Driver = &quot;SQL Server&quot;,
-               Server = &quot;LAALINEHAN\\SQLEXPRESS&quot;,
-               Database = &quot;alinehan&quot;,
-               Trusted_connection = &quot;True&quot;)</code></pre>
-<pre class="sql"><code>select top 10 * 
+<pre class="sql"><code>select top 5 * 
 from dbo.retail_sales</code></pre>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-2">Table 1: </span>Displaying records 1 - 10</caption>
+<caption><span id="tab:unnamed-chunk-2">Table 1: </span>5 records</caption>
 <thead>
 <tr class="header">
 <th align="left">InvoiceNo</th>
@@ -102,62 +95,12 @@ from dbo.retail_sales</code></pre>
 <td align="right">17850</td>
 <td align="left">United Kingdom</td>
 </tr>
-<tr class="even">
-<td align="left">536365</td>
-<td align="left">22752</td>
-<td align="left">SET 7 BABUSHKA NESTING BOXES</td>
-<td align="right">2</td>
-<td align="left">2010-12-01 08:26:00.0000000</td>
-<td align="right">7.65</td>
-<td align="right">17850</td>
-<td align="left">United Kingdom</td>
-</tr>
-<tr class="odd">
-<td align="left">536365</td>
-<td align="left">21730</td>
-<td align="left">GLASS STAR FROSTED T-LIGHT HOLDER</td>
-<td align="right">6</td>
-<td align="left">2010-12-01 08:26:00.0000000</td>
-<td align="right">4.25</td>
-<td align="right">17850</td>
-<td align="left">United Kingdom</td>
-</tr>
-<tr class="even">
-<td align="left">536366</td>
-<td align="left">22633</td>
-<td align="left">HAND WARMER UNION JACK</td>
-<td align="right">6</td>
-<td align="left">2010-12-01 08:28:00.0000000</td>
-<td align="right">1.85</td>
-<td align="right">17850</td>
-<td align="left">United Kingdom</td>
-</tr>
-<tr class="odd">
-<td align="left">536366</td>
-<td align="left">22632</td>
-<td align="left">HAND WARMER RED POLKA DOT</td>
-<td align="right">6</td>
-<td align="left">2010-12-01 08:28:00.0000000</td>
-<td align="right">1.85</td>
-<td align="right">17850</td>
-<td align="left">United Kingdom</td>
-</tr>
-<tr class="even">
-<td align="left">536367</td>
-<td align="left">84879</td>
-<td align="left">ASSORTED COLOUR BIRD ORNAMENT</td>
-<td align="right">32</td>
-<td align="left">2010-12-01 08:34:00.0000000</td>
-<td align="right">1.69</td>
-<td align="right">13047</td>
-<td align="left">United Kingdom</td>
-</tr>
 </tbody>
 </table>
 </div>
 <p>For a simple example just to grasp the syntax, imagine you want to only select item with Stock Code = 22423 and then perform a wide variety of calculations on that sub-population without creating new temp tables or tables.</p>
 <pre class="sql"><code>with cakestand_sales as (
-  select top 10 *
+  select top 5 *
   from dbo.retail_sales
   where StockCode = &#39;22423&#39;
 )
@@ -165,7 +108,7 @@ select *
 from cakestand_sales</code></pre>
 <div class="knitsql-table">
 <table>
-<caption><span id="tab:unnamed-chunk-3">Table 2: </span>Displaying records 1 - 10</caption>
+<caption><span id="tab:unnamed-chunk-3">Table 2: </span>5 records</caption>
 <thead>
 <tr class="header">
 <th align="left">InvoiceNo</th>
@@ -227,56 +170,6 @@ from cakestand_sales</code></pre>
 <td align="left">2010-12-01 13:21:00.0000000</td>
 <td align="right">12.75</td>
 <td align="right">17905</td>
-<td align="left">United Kingdom</td>
-</tr>
-<tr class="even">
-<td align="left">536537</td>
-<td align="left">22423</td>
-<td align="left">REGENCY CAKESTAND 3 TIER</td>
-<td align="right">2</td>
-<td align="left">2010-12-01 13:51:00.0000000</td>
-<td align="right">12.75</td>
-<td align="right">15922</td>
-<td align="left">United Kingdom</td>
-</tr>
-<tr class="odd">
-<td align="left">536539</td>
-<td align="left">22423</td>
-<td align="left">REGENCY CAKESTAND 3 TIER</td>
-<td align="right">2</td>
-<td align="left">2010-12-01 14:03:00.0000000</td>
-<td align="right">12.75</td>
-<td align="right">15165</td>
-<td align="left">United Kingdom</td>
-</tr>
-<tr class="even">
-<td align="left">536544</td>
-<td align="left">22423</td>
-<td align="left">REGENCY CAKESTAND 3 TIER</td>
-<td align="right">40</td>
-<td align="left">2010-12-01 14:32:00.0000000</td>
-<td align="right">12.72</td>
-<td align="right">NA</td>
-<td align="left">United Kingdom</td>
-</tr>
-<tr class="odd">
-<td align="left">536562</td>
-<td align="left">22423</td>
-<td align="left">REGENCY CAKESTAND 3 TIER</td>
-<td align="right">2</td>
-<td align="left">2010-12-01 15:08:00.0000000</td>
-<td align="right">12.75</td>
-<td align="right">13468</td>
-<td align="left">United Kingdom</td>
-</tr>
-<tr class="even">
-<td align="left">536592</td>
-<td align="left">22423</td>
-<td align="left">REGENCY CAKESTAND 3 TIER</td>
-<td align="right">47</td>
-<td align="left">2010-12-01 17:06:00.0000000</td>
-<td align="right">12.72</td>
-<td align="right">NA</td>
 <td align="left">United Kingdom</td>
 </tr>
 </tbody>

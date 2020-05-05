@@ -1,6 +1,7 @@
 ---
 title: Common Table Expressions in SQL
-author: Amy
+author: Amy Linehan
+authors: ["alinehan"]
 date: '2020-04-13'
 slug: common-table-expressions-in-sql
 categories: []
@@ -8,7 +9,6 @@ tags:
   - SQL
 subtitle: ''
 summary: ''
-authors: []
 lastmod: '2020-04-13T14:55:25-07:00'
 featured: no
 image:
@@ -30,7 +30,7 @@ CTEs are shortcuts you can build into your SQL scripts to help simplify and cond
 # Syntax 
 A simple example of a CTE is as follows. Let's say you have sales data of how much a store sold in an online store. The data is from <https://www.kaggle.com/vijayuv/onlineretail>. 
 
-```{r}
+```{r, include=F}
 library(DBI)
 db = dbConnect(odbc::odbc(), 
                Driver = "SQL Server",
@@ -40,7 +40,7 @@ db = dbConnect(odbc::odbc(),
 ```
 
 ```{sql, connection = db}
-select top 10 * 
+select top 5 * 
 from dbo.retail_sales
 ```
 
@@ -49,7 +49,7 @@ For a simple example just to grasp the syntax, imagine you want to only select i
 
 ```{sql, connection = db}
 with cakestand_sales as (
-  select top 10 *
+  select top 5 *
   from dbo.retail_sales
   where StockCode = '22423'
 )
