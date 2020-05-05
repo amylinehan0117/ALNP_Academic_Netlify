@@ -1,5 +1,6 @@
 ---
 title: Column to Rows in Dplyr
+author: Amy Linehan
 authors: ["alinehan"]
 date: '2020-02-18'
 slug: column-to-rows-in-dplyr
