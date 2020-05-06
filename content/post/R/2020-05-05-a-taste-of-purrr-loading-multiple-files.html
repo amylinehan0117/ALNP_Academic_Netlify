@@ -1,0 +1,52 @@
+---
+title: 'A Taste of Purrr: Loading Multiple files in R'
+author: Nellie Ponarul
+date: '2020-05-05'
+slug: a-taste-of-purrr-loading-multiple-files
+categories:
+  - R
+tags:
+  - R
+  - Purrr
+subtitle: ''
+summary: 'Read in muliple files into R without writing separate code for each.'
+authors: ["nponarul"]
+lastmod: '2020-05-05T21:15:32-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<p>When you have multiple files you need to load into R, each to their own objects, you can use purrr to avoid writing <em>object_name &lt;- read.table(filepath)</em> over and over again.</p>
+<p>Purrr is a very nifty library in R that provides tools to manipulate lists in R. For this example, we’ll use <em>map()</em> and <em>assign()</em>.</p>
+<p>Let’s go through the steps:</p>
+<div id="make-a-vector-of-file-names" class="section level3">
+<h3>1) Make a vector of file names</h3>
+<p>These should be your filepaths</p>
+<pre class="r"><code>library(tidyverse)
+filepaths &lt;-  c(
+  &quot;file1.csv&quot;,
+  &quot;file2.csv&quot;,
+  &quot;file3.csv&quot;
+) 
+# We&#39;re adding the names of the files as the names of each of the filepaths
+filepaths &lt;- filepaths %&gt;% set_names(nm = basename(.) %&gt;% tools::file_path_sans_ext())</code></pre>
+</div>
+<div id="read-in-the-files-to-create-a-list-of-data-frames" class="section level3">
+<h3>2) Read in the files to create a list of data frames</h3>
+<p>This will read in the data frame in the file path and name it the name from above</p>
+<pre class="r"><code>files &lt;- purrr::map(filepaths, read_csv)</code></pre>
+<p>Now we have a list of processed dataframes!</p>
+</div>
+<div id="save-each-object-in-the-list-to-its-own-variable-name" class="section level3">
+<h3>3) Save each object in the list to it’s own variable name</h3>
+<p>If you want to work with these objects separately in R, you may want them each saved as a separate data frame
+pmap is purrr’s function for mapping several variable to a function. <em>.l</em> is the list of parameters which are named <em>.x</em>, <em>.y</em>, etc. <em>.f</em> is the function which will be applied to the parameters (see <a href="https://rstudio.com/resources/cheatsheets/">RStudio’s purrr cheatsheet for more information</a> for more information.)</p>
+<p>It’s very important we set the environment to <em>.GlobalEnv</em>, because otherwise the objects won’t show up in our environmnet!</p>
+<pre class="r"><code>purrr::pmap(.l = list(.x = names(files), .y = files), .f = ~assign(.x, .y, envir = .GlobalEnv))</code></pre>
+</div>
