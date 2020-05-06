@@ -7,8 +7,7 @@ slug: data-table-joins
 categories: ["R"]
 tags: ["R"]
 subtitle: ''
-summary: 'Although I\'ve used the data.table package regularly for almost two years now, I still find myself converting my objects into data frames for joins. Part of this is definitely just laziness, so I figured writing about joins in data.table would help me understand and remember the syntax better moving forward.'
-
+summary: ''
 lastmod: '2020-04-03T13:01:16-07:00'
 featured: no
 image:
