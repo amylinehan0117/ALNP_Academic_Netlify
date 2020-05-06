@@ -6,7 +6,7 @@ date: '2020-02-18'
 slug: column-to-rows-in-dplyr
 categories: ["R"]
 tags: ["R"]
-subtitle: ''
+subtitle: 'Explanation and example for separating data using dplyr'
 summary: ''
 lastmod: '2020-04-03T12:35:17-07:00'
 featured: no

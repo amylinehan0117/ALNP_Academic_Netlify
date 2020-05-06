@@ -11,7 +11,7 @@ tags:
   - dplyr
   - data.table
 subtitle: ''
-summary: ''
+summary: 'Using data.table to perform common dplyr data cleaning and analyses'
 lastmod: '2020-04-10T13:38:07-07:00'
 featured: no
 image:
@@ -20,8 +20,6 @@ image:
   preview_only: no
 projects: []
 ---
-
-
 
 For the first year of my career as a consultant, my manager wrote his scripts in data.table and I somehow avoided ever having to really understand what the heck he was doing. It took a full year, but eventually I started understanding and using data.table in my scripts. Now, don't get me wrong I'm definitely still a tidyverse girl and prefer ctrl+alt+m to brackets any day. But, I can't deny that there are situations where using data table is faster, easier and cleaner.
 
