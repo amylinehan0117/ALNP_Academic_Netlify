@@ -1,0 +1,61 @@
+---
+title: 'A Taste of Purrr: Loading Multiple files in R'
+author: Nellie Ponarul
+date: '2020-05-05'
+slug: a-taste-of-purrr-loading-multiple-files
+categories:
+  - R
+tags:
+  - R
+  - Purrr
+subtitle: ''
+summary: 'Read in muliple files into R without writing separate code for each.'
+authors: ["nponarul"]
+lastmod: '2020-05-05T21:15:32-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+When you have multiple files you need to load into R, each to their own objects, you can use purrr to avoid writing *object_name <- read.table(filepath)* over and over again.
+
+Purrr is a very nifty library in R that provides tools to manipulate lists in R. For this example, we'll use *map()* and *assign()*. 
+
+Let's go through the steps:
+
+### 1) Make a vector of file names
+  These should be your filepaths
+  
+```{r, eval = FALSE}
+library(tidyverse)
+filepaths <-  c(
+  "file1.csv",
+  "file2.csv",
+  "file3.csv"
+) 
+# We're adding the names of the files as the names of each of the filepaths
+filepaths <- filepaths %>% set_names(nm = basename(.) %>% tools::file_path_sans_ext())
+```
+
+
+### 2) Read in the files to create a list of data frames  
+This will read in the data frame in the file path and name it the name from above 
+```{r, eval = FALSE}
+files <- purrr::map(filepaths, read_csv)
+```
+
+Now we have a list of processed dataframes!
+
+### 3) Save each object in the list to it's own variable name
+If you want to work with these objects separately in R, you may want them each saved as a separate data frame
+pmap is purrr's function for mapping several variable to a function. *.l* is the list of parameters which are named *.x*, *.y*, etc. *.f* is the function which will be applied to the parameters (see [RStudio's purrr cheatsheet for more information](https://rstudio.com/resources/cheatsheets/) for more information.)
+
+It's very important we set the environment to *.GlobalEnv*, because otherwise the objects won't show up in our environmnet!
+```{r, eval = FALSE}
+purrr::pmap(.l = list(.x = names(files), .y = files), .f = ~assign(.x, .y, envir = .GlobalEnv))
+```

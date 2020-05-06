@@ -7,17 +7,14 @@ authors:
 - nponarul
 education:
   courses:
-  - course: Masters in Public Health/Biostatics (Nellie)
-    institution: Harvard University
-    year: 2022
-  - course: BSc in Applied Mathematics (Nellie)
+  - course: BSc in Applied Mathematics
     institution: UCLA
     year: 2017
 email: ''
 interests: 
-  - Programming in R, SQL, Python, VBA and any other language that comes her way
-  - Plays the violin, ukele, piano (the list goes on) professionally and for fun! 
-  - Can usually be found with black coffee and a good book 
+  - Math, playing violin/piano/harp, watching Great British Bake Off 
+  - Programming in R, SQL, and Python
+  - Good books
 
 
 name:  Nellie Ponarul
@@ -37,4 +34,4 @@ user_groups: ["The Crew"]
 ---
 
 
-Nellie is working towards a masters in something awesome that Amy can never remember  (biostats??) at Harvard University. Never far from a musical instrument or climbing wall.
+Nellie is a data analytics consultant with a special interest in data science for healthcare. Never far from a musical instrument or a cup of hot coffee.
