@@ -1,5 +1,5 @@
 ---
-title: Is my query dont yet? Tips for Optimizing SQL queries
+title: Is my query done yet? Tips for Optimizing SQL queries
 author: Nellie Ponarul
 date: '2020-05-06'
 slug: is-my-query-dont-yet-tips-for-optimizing-sql-queries
@@ -8,7 +8,7 @@ categories:
 tags:
   - SQL
 subtitle: ''
-summary: 'Some tricks I''v learned for speeding up queries.'
+summary: 'Some tricks I''ve learned for speeding up queries.'
 authors: ["nponarul"]
 lastmod: '2020-05-06T09:52:34-07:00'
 featured: no
