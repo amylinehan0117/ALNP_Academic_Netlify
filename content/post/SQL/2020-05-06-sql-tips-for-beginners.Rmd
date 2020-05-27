@@ -1,0 +1,138 @@
+---
+title: SQL Tips for Beginners
+author: Amy Linehan 
+date: '2020-05-06'
+slug: sql-tips-for-beginners
+categories:
+  - SQL
+tags:
+  - SQL
+subtitle: ''
+summary: 'Reminders, tips and tricks for programmers new to SQL and for those who just need a refresh! '
+authors: ['alinehan']
+lastmod: '2020-05-06T16:22:35-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=F}
+library(DBI)
+db = dbConnect(odbc::odbc(), 
+               Driver = "SQL Server",
+               Server = "LAALINEHAN\\SQLEXPRESS",
+               Database = "alinehan",
+               Trusted_connection = "True")
+```
+Here I've complied some simple SQL tips and queries to help new programmers or anyone that needs a refresher. This is not intended to be all incompassing but just contains the things I use reguarly when viewing and filtering data in SQL. All of this information is for Microsoft SQL Server Management Studio on a PC. 
+
+
+### Select Database 
+
+About 60% of the time that I open SQL, I go to run a query and get the following error: "Invalid object name". After about 30 seconds of panic in which I double check my query for any typos, I realize I forgot to add that essential line at the top of my script: "USE database". In order to use any tables or stored procedures etc. in a query that are saved in a database, you need to let your SQL server know which database you're using within the server. You only need to run that line of code once and then you can access all tables, stored procedures etc. in that database.
+
+### Running a Query
+
+In Microsoft SQL, to run a SQL query, you can use the Excute button with the green arrow button above your query. If you just click the button, your entire query will run. If want to run certain lines of of your SQL query, you can select those lines under the shift key or highlighting them with your mouse then click execute. On your keyboard, the F5 button also works to execute your query. 
+
+### Building a Query
+
+SQL queries are essentially built on the use of five verbs: SELECT, FROM, WHERE, GROUP BY AND HAVING and are built in that order: 
+
+# From
+The "FROM" function identifies which table/view/object you want to pull data from. To reference a table/object outside of your database write "FROM SCHEMA_NAME.TABLE_NAME". 
+
+# Select
+SELECT indicates what you want returned in the query. If a field or calculation is not listed in the SELECT statement, it will not appear in the result of the query. If you want to return all columns, use an asterick sign ("SELECT *") as a shortcut to listing out all the column names. In the following example, the query selects two fields from the table dbo.retail_sales and outputs two other columns that are the product of the fields outputted:
+
+
+```{sql, connection = db}
+select  Quantity,
+        UnitPrice,
+        Quantity * UnitPrice,
+        Quantity * UnitPrice as Revenue
+from dbo.retail_sales
+```
+
+The final two fields outputted above are the exact same calculation but the final field just is renamed for a cleaner and easier to follow output. Next, let's say you just want to glipse at a couple rows in your output because even here you can see this data goes on for almost 1,000 more rows. Tod do this, just add the word "TOP" after your SELECT statement to indicate you want to show the top X number of rows in your output (the default is 10). In the example below, the query outputs the first five rows of the table. If you delete the "5" after the word TOP,it would automatically default to returning the first ten rows of data. 
+
+```{sql, connection = db}
+SELECT TOP 5 * 
+FROM dbo.retail_sales
+```
+You can also use the key word "DISTINCT" that will return the distinct records for the fields in your select statment (ex: SELECT DISTINCT * would return the distinct rows of all fields). This function works similarly to the remove duplicates functionality in Excel. 
+
+# Where 
+
+Okay here is where things get fun y'all. The WHERE statement enables you to filter your data. Similar to filters in other programming languages, you can apply conditional filtering using "AND" and "OR". Viewing data is great but filtering is really when you get to play around. The key to filtering in SQL (and honestly most other programming languages) is remembering PEMDAS and making sure your parentheses are not only placed in the right location but that you're not missing any closed paranetheses. This is one of the most common mistakes I make when querying so if you're getting an error make sure to double check that everything is in the right place and closed. 
+
+
+In the two examples below, you can see that the query intends to focus on two invoice numbers and filter to only show records where the unit price is less than 2.00. However, the second example does not use the parentheses and in its output, you can see two records where the unit price is greater than 2 because the calculation moves from left to right so the only filter on these two records is InvoiceNo = 537446.
+
+
+```{sql, connection = db}
+SELECT top 5 * 
+FROM dbo.retail_sales
+where unitPrice < 2.00 and (invoiceno = '536365' OR InvoiceNo = '537446')
+
+```
+```{sql, connection = db}
+SELECT top 5 * 
+FROM dbo.retail_sales
+where unitPrice < 2.00 and invoiceno = '536365' OR InvoiceNo = '537446'
+
+```
+
+# Group By 
+
+The group by statement allows you to group the data by at least one field and then output calculations based off that grouping. The most common calculations that I use regularly are max(), min() and count(). Min and max both return the smallest or largest value respectively of hte field provided by the fields grouped by. For example, in our sample data, grouping by the InvoiceNo and returning the max(UnitPrice) would return the largest unit price of an item sold in each invoiceNo. Let's look at some examples:
+
+```{sql, connection = db}
+
+SELECT InvoiceNo , InvoiceDate, max(unitprice) as highest_price
+FROM dbo.retail_sales
+GROUP BY InvoiceNo , InvoiceDate
+
+```
+
+A useful trick is using the count(*) or count(distinct FIELD_NAME) functions as the aggregate in a group by query to get the row count for each group:
+
+```{sql, connection = db}
+
+SELECT InvoiceNo , count(distinct stockcode) as product_ct
+FROM dbo.retail_sales
+GROUP BY InvoiceNo 
+
+```
+
+# Having 
+The final verb, HAVING, is similar to a where clause in that it filters data, but HAVING is only utilized when you have a group by statement. If you have a grouped query and want to filter it, you can use the HAVING statement to filter the rows of your output. 
+
+For example, if we add on to our previous example where we calculated the number of distinct products in each invoice to only return invoices with more than 10 products we would do the following:
+```{sql, connection = db}
+
+SELECT InvoiceNo ,  COUNT(DISTINCT stockcode) as product_ct
+FROM dbo.retail_sales
+GROUP BY InvoiceNo 
+HAVING COUNT(DISTINCT stockcode) > 10
+
+```
+
+
+This has hopfeully been a useful quick overview of how to build queries in SQL and how to get started. Next up, I'm going to write up how to do simple joins in SQL so you can link your tables together. 
+
+
+
+
+
+
+
