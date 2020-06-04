@@ -27,6 +27,9 @@ require(stringr)
 
 Regular expressions (i.e. "regex") are extremly useful to help clean data and parse strings. For more information on regular expressions in general, check out <https://rstudio.com/wp-content/uploads/2016/09/RegExCheatsheet.pdf>. For this post, we're going to focus on using lookarounds in regex. Lookarounds are helpful to reduce complicated regex expressions and make it easier to identiify what we want to find in a string. Lookarounds are assertions so they return a "match" or "not a match" that indicates if the pattern matches or doesn't match what it's looking for. 
 
+![](https://media.giphy.com/media/uLnPIWsqIz2aA/giphy.gif)
+
+
 There are two types of lookarounds: lookaheads and lookbehinds. Both of these types have negative and postive variations. The syntax of all four types of lookarounds are as follows:
 
 

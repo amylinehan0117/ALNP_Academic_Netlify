@@ -6,7 +6,7 @@ date: '2020-02-18'
 slug: column-to-rows-in-dplyr
 categories: ["R"]
 tags: ["R"]
-subtitle: 'Explanation and example for separating data using dplyr'
+subtitle: 'Details and examples on separating data in dplyr'
 summary: ''
 lastmod: '2020-04-03T12:35:17-07:00'
 featured: no
@@ -25,12 +25,9 @@ library(tidyverse)
 
 
 ```{r}
-
-
 df <- data.frame(groupid = c(0001,0002,0003,0004,0005), 
                  userid = c("448,938,483,594,595",
                             "121", "823", "765, 089", "120, 982, 843"))
-
 head(df)
 ```
 
@@ -43,7 +40,7 @@ For this review of separate, I primarily relied on my own messing aroud and the 
 Since I'm impatient and didn't read through the documentation, my first attempt at using this function was something along the lines of this: 
 
 ```{r}
-#df %>% separate(userid)
+df %>% separate(userid)
 
 ```
 
@@ -102,7 +99,7 @@ The tidyr documentation for this function is concise and helpful and what I reli
 For my example, getting the data to a long, two-column set was super simple: 
 
 ```{r}
-df %>% separate_rows(userid)
+df %>% separate_rows(userid) 
 
 ```
 
@@ -114,5 +111,9 @@ df %>% separate_rows(userid) %>% group_by(groupid) %>% count()
 ```
 
 
+Honestly this is why regardless of how much time I spend programming in other languages and packages for work, I always come back to dplyr whenever possible. There is usually a function for exactly what I need and it's more often than not easy to use and understand. Dplyr is not perfect but on days like today it definitely came thorugh for me! 
+
+
+![](https://media.giphy.com/media/Is1O1TWV0LEJi/giphy.gif)
 
 
