@@ -40,7 +40,7 @@ For this review of separate, I primarily relied on my own messing aroud and the 
 Since I'm impatient and didn't read through the documentation, my first attempt at using this function was something along the lines of this: 
 
 ```{r}
-df %>% separate(userid)
+#df %>% separate(userid)
 
 ```
 

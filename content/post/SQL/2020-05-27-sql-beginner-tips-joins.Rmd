@@ -43,6 +43,7 @@ from OFFICE_LOCATION
 
 The code to re-build this table if you want it to follow again is here:
 ```{sql, connection = DB, eval = FALSE}
+/*
 CREATE TABLE OFFICE_LOCATION
 (ID INTEGER PRIMARY KEY,
 CITY CHAR(20),
@@ -54,10 +55,11 @@ INSERT INTO OFFICE_LOCATION VALUES (13, 'Phoenix', 'AZ', 33, 112);
 INSERT INTO OFFICE_LOCATION VALUES (44, 'Denver', 'CO', 40, 105);
 INSERT INTO OFFICE_LOCATION VALUES (66, 'San Jose', 'CA', 47, 68);
 
+*/
 ```
 
 The second table contains fake employee-location information:
-```{sql, connection = db}
+```{sql, connection = DB}
 SELECT * 
 FROM EMPLOYEE_LOCATION
 
@@ -65,6 +67,7 @@ FROM EMPLOYEE_LOCATION
 
 If you want to follow along directly, here's the queries to build this table:
 ```{sql, connection = DB, eval = FALSE}
+/*
 CREATE TABLE EMPLOYEE_LOCATION
 (EMP_ID INTEGER,
 EMP_NAME CHAR(50),
@@ -76,7 +79,7 @@ INSERT INTO EMPLOYEE_LOCATION VALUES (1344, 'Sarah', 'Denver', 'CO');
 INSERT INTO EMPLOYEE_LOCATION VALUES (664, 'Anna', 'Phoenix', 'AZ');
 INSERT INTO EMPLOYEE_LOCATION VALUES (664, 'Paul', 'Denver', 'CO');
 INSERT INTO EMPLOYEE_LOCATION VALUES (664, 'Sean', 'New York', 'NY');
-
+*/
 ```
 A great cheat sheet to have on hand for SQL joins is this: 
 
