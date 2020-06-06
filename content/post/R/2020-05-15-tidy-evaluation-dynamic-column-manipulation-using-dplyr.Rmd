@@ -1,0 +1,46 @@
+---
+title: 'Tidy Evaluation: Dynamic column manipulation using dplyr'
+author: Nellie Ponarul
+date: '2020-05-15'
+slug: tidy-evaluation-dynamic-column-manipulation-using-dplyr
+categories:
+  - R
+tags:
+  - R
+  - tidyeval
+  - dplyr
+subtitle: ''
+summary: 'Functionalize dplyr column manipulation easily with tidyeval!'
+authors: ["nponarul"]
+lastmod: '2020-05-15T16:16:25-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+When it comes to R, the [tidyverse](https://www.tidyverse.org/) is my dream land. I often have the problem where I want to write a fuction to manipulate data frames, but can't figure out a good way to pass field names to a function and be able to run dplyr code on it. 
+
+I know there are some workarounds to this in base R, but I recently started learning about [tidy evaluation](https://tidyeval.tidyverse.org/). It's a pretty simple framework in R that allows you to functionalize dplyr commands.
+
+The documentation for this framework is extensive and I suggest reading it. I am going to examples of this that have worked for me here.
+
+#### Add a column to a dataframe
+In this example, I create a function that adds a lagged version of any column in a dataframe to the dataframe.
+```{r}
+suppressMessages(library(tidyverse))
+
+add_lag_field <- function(df, col) {
+  # define new field name
+  var_name = paste0(col,"_lag")
+  return(df %>% mutate(
+    !!sym(var_name) := lag(!!sym(col))
+    )
+  )
+}
+
+head(add_lag_field(iris, "Sepal.Width"))
+```
+
