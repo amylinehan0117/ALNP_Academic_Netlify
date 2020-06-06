@@ -23,7 +23,7 @@ copyright = ""
 theme = "academic"
 
 # Get last modified date for content from Git?
-enableGitInfo = false
+enableGitInfo = true
 
 # Default language to use (if you setup multilingual support)
 defaultContentLanguage = "en"
@@ -31,7 +31,7 @@ hasCJKLanguage = false  # Set `true` for Chinese/Japanese/Korean languages.
 defaultContentLanguageInSubdir = false
 removePathAccents = true  # Workaround for https://github.com/gohugoio/hugo/issues/5687
 
-summaryLength = 30  # Listing summary length in words. Also, see `abstract_length` in `params.toml`.
+summaryLength = 25  # Listing summary length in words. Also, see `abstract_length` in `params.toml`.
 paginate = 10  # Number of items per page in paginated lists.
 enableEmoji = true
 footnotereturnlinkcontents = "<sup>^</sup>"
@@ -40,7 +40,7 @@ ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "
 
 [params]
   name = "Amy Linehan and Nellie Ponarul"
-  description = "A site about our adventures in data"
+  description = "Programming Tips and Tricks for R, SQL, Python and more"
   role = ""
   organization = ""
   organization_url = ""
@@ -49,6 +49,9 @@ ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "
   twitter = ""
   github = ""
 
+
+# google
+googleAnalytics = "UA-168663553-1"
 
   # Date format (refer to Go's date format: http://flippinggodateformat.com )
   #   Examples: "Mon, Jan 2, 2006" or "2006-01-02"
@@ -118,7 +121,7 @@ ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "
 
 
 [[menu.main]]
-  name = "All Posts"
+  name = "Latest Posts"
   url = "#posts"
   weight = 3
 
@@ -141,7 +144,6 @@ ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "
   name = "Contact Us"
   url = "#contact"
   weight = 7
-
 
 [outputs]
   home = [ "HTML", "RSS", "JSON", "WebAppManifest" ]

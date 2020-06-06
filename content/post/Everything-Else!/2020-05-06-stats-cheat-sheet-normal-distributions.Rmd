@@ -1,0 +1,37 @@
+---
+title: 'Stats Cheat Sheet: Normal Distributions'
+author: alinehan
+date: '2020-05-06'
+slug: stats-cheat-sheet-normal-distributions
+categories:
+  - Other
+tags:
+  - Statistics
+  - Other
+subtitle: ''
+summary: 'Tips, Tricks and Reminders for those of us who struggle to remember what our professors/Google taught us: Normal Distributions'
+authors: ["alinehan"]
+lastmod: '2020-05-06T10:57:33-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+If you've ever taken a stats/econ/math class, the phrase "normal distribution" probably rings a bell for you (pun definitely intended). Also known as the bell curve, the probably density function of the normal distribution occurs often in society/nature/the world. There are about a million different defintions to describe this distribution on the world wide web but my favorite is a stats definition that describes the normal distribution as "a probability function that describes how the values of a variable are distributed. It is a symmetric distribution where most of the observations cluster around the central peak and the probabilities for values further away from the mean taper off equally in both directions" (<https://statisticsbyjim.com/basics/normal-distribution/>). This definition highlights that the function centers around the mean/average of the values and hence the highest point in the graph is the mean. 
+
+I'm not going to dive into the mathemtical functions and reasoning behind the normal distribution or probably density functions in this post. If you're interested in that I recommend reviewing the Woflram Alpha page (or just google normal distribution there is so much information you can dive into) <https://mathworld.wolfram.com/NormalDistribution.html>. 
+
+In R, the stats package contains four functions for the Normal Distribution. For the complete documentation, just type "?rnorm" into your R console. R has four functions pertaining to the normal distribution and each return a different aspect of a distribution: 
+
+Function  | Description
+------------- | -------------
+dnorm(x, mean = 0, sd = 1, log = FALSE) | Returns the density 
+rnorm(n, mean = 0, sd =1) | Returns random deviates 
+pnrom(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) | 
+
+
+
+

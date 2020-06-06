@@ -1,0 +1,148 @@
+---
+title: 'SQL Beginner Tips: Joins! '
+author: Amy Linehan 
+date: '2020-05-27'
+slug: sql-beginner-tips-joins
+categories:
+  - SQL
+tags:
+  - SQL
+subtitle: 'An introduction & syntax review of basic joins in SQL'
+summary: 'A Introduction to SQL Joins including left joins, inner joins and full joins'
+authors: ["alinehan"]
+lastmod: '2020-05-27T10:18:38-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, include=F}
+library(DBI)
+DB = dbConnect(odbc::odbc(), 
+               Driver = "SQL Server",
+               Server = "LAALINEHAN\\SQLEXPRESS",
+               Database = "alinehan",
+               Trusted_connection = "True")
+```
+
+If you're new to SQL (or just need a fresher) feel free to check out my previous post about how to build SQL queries ([previous post](/sql-tips-for-beginners)).
+
+Now, let's talk about joins in SQL. The purpose of this post is to cover the basic foundations on how to join data from different tables in Microsoft SQL Server. For this post, I've build two small tables that I can join together. Here's a quick peek at them:
+
+```{sql, connection=DB}
+select * 
+from OFFICE_LOCATION
+```
+
+The code to re-build this table if you want it to follow again is here:
+```{sql, connection = DB, eval = FALSE}
+/*
+CREATE TABLE OFFICE_LOCATION
+(ID INTEGER PRIMARY KEY,
+CITY CHAR(20),
+STATE CHAR(20),
+LAT_N INTEGER,
+LONG_W INTEGER);
+
+INSERT INTO OFFICE_LOCATION VALUES (13, 'Phoenix', 'AZ', 33, 112);
+INSERT INTO OFFICE_LOCATION VALUES (44, 'Denver', 'CO', 40, 105);
+INSERT INTO OFFICE_LOCATION VALUES (66, 'San Jose', 'CA', 47, 68);
+
+*/
+```
+
+The second table contains fake employee-location information:
+```{sql, connection = DB}
+SELECT * 
+FROM EMPLOYEE_LOCATION
+
+```
+
+If you want to follow along directly, here's the queries to build this table:
+```{sql, connection = DB, eval = FALSE}
+/*
+CREATE TABLE EMPLOYEE_LOCATION
+(EMP_ID INTEGER,
+EMP_NAME CHAR(50),
+CITY CHAR(20),
+ST CHAR (20)
+)
+INSERT INTO EMPLOYEE_LOCATION VALUES (123, 'David', 'San Francisco', 'CA' );
+INSERT INTO EMPLOYEE_LOCATION VALUES (1344, 'Sarah', 'Denver', 'CO');
+INSERT INTO EMPLOYEE_LOCATION VALUES (664, 'Anna', 'Phoenix', 'AZ');
+INSERT INTO EMPLOYEE_LOCATION VALUES (664, 'Paul', 'Denver', 'CO');
+INSERT INTO EMPLOYEE_LOCATION VALUES (664, 'Sean', 'New York', 'NY');
+*/
+```
+A great cheat sheet to have on hand for SQL joins is this: 
+
+![](/img/20200527_sqlJoins/sqljoins1.jpg)
+
+This joins image above outlines seven different joins but really they can be broken into four categories: left join, right join, inner join and outer join. 
+
+First, let's focus on the left join which are the two joins outlined in the image on the lefthandside. The only difference between these two joins is that you can use the WHERE statement to filter your output to only return records from one table. In general though, the left join is very similar. The only trick to remember is that the first table in the query (the one listed in the FROM statement) is your "base table". In other words, all records will be returned from this table regardless of if they match to the second table. Records in the second table (the one listed in the LEFT JOIN statement) will only be returned in the output if it matches to a record in the base table.
+
+The base syntax for a left join (in which we return all fields of both tables):
+
+```{sql, connection=DB}
+
+SELECT A.*, B.*
+FROM OFFICE_LOCATION A
+LEFT JOIN EMPLOYEE_LOCATION B 
+ON A.CITY = B.CITY
+
+```
+
+In our output, you can see that the last record for the city of San Jose CA does not have any data for the final four fields. These fields are from the second table, employee_location, and so this indicates that there is not a city that matches "San Jose" in the second table. If you only want to return the records that match between both tables, you can update the query to be the following:
+
+```{sql, connection= DB}
+SELECT A.*, B.*
+FROM OFFICE_LOCATION A
+LEFT JOIN EMPLOYEE_LOCATION B 
+ON A.CITY = B.CITY
+WHERE B.CITY IS NOT NULL
+
+
+```
+
+If you only want to return the records that do *not* match, you can just remove the "NOT" from that final where clause. 
+
+All other types of joins slightly vary from this syntax. A right join is identical to left join but the second table is the main table and the first table listed in the query is matched onto the second. 
+
+The inner join function only returns records that match between both tables. In inner joins, it does not matter which table you put first in the query and which you put second. You can also just use the 'JOIN' function and SQL defaults to an inner join. Our example above with an inner join would like like the following:
+
+```{sql, connection = DB}
+SELECT A.*, B.*
+FROM OFFICE_LOCATION A
+INNER JOIN EMPLOYEE_LOCATION B 
+ON A.CITY = B.CITY
+
+```
+
+You can see that the left join with the where clause is idential to the output from the inner join. That's because those queries only return the matched records between the two tables. 
+
+The final type of join that I rely on regularly is a full join. The full join returns everything from both tables. In our example, it would look like this:
+
+
+```{sql, connection=DB}
+SELECT A.*, B.*
+FROM OFFICE_LOCATION A
+FULL JOIN EMPLOYEE_LOCATION B 
+ON A.CITY = B.CITY
+```
+
+The records with no ID value but values in the later fields are from the EMPLOYEE_LOCATION table but do not match onto the first table. You can see here that San Francisco is not in the first table and San Jose is spelled wrong in the second table - hence they don't match. However, since it is a full join, all the records even the ones without a match are included in the output. 
+
+
+This has been a quick (and hopefully helpful!) guide to basic joins in SQL. I encourage you to keep playing around with joining on multiple fields and utilizing where clauses to filter your outputs. SQL also has super cool between joins that are great to look into if you're joining tables with dates. Enjoy your joining!
+
+
+
+

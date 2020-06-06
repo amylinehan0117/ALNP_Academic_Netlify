@@ -1,0 +1,431 @@
+---
+title: 'SQL Beginner Tips: Joins! '
+author: Amy Linehan 
+date: '2020-05-27'
+slug: sql-beginner-tips-joins
+categories:
+  - SQL
+tags:
+  - SQL
+subtitle: 'An introduction & syntax review of basic joins in SQL'
+summary: 'A Introduction to SQL Joins including left joins, inner joins and full joins'
+authors: ["alinehan"]
+lastmod: '2020-05-27T10:18:38-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<p>If you’re new to SQL (or just need a fresher) feel free to check out my previous post about how to build SQL queries (<a href="/sql-tips-for-beginners">previous post</a>).</p>
+<p>Now, let’s talk about joins in SQL. The purpose of this post is to cover the basic foundations on how to join data from different tables in Microsoft SQL Server. For this post, I’ve build two small tables that I can join together. Here’s a quick peek at them:</p>
+<pre class="sql"><code>select * 
+from OFFICE_LOCATION</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 1: </span>3 records</caption>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="left">CITY</th>
+<th align="left">STATE</th>
+<th align="right">LAT_N</th>
+<th align="right">LONG_W</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">13</td>
+<td align="left">Phoenix</td>
+<td align="left">AZ</td>
+<td align="right">33</td>
+<td align="right">112</td>
+</tr>
+<tr class="even">
+<td align="right">44</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+<td align="right">40</td>
+<td align="right">105</td>
+</tr>
+<tr class="odd">
+<td align="right">66</td>
+<td align="left">San Jose</td>
+<td align="left">CA</td>
+<td align="right">47</td>
+<td align="right">68</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The code to re-build this table if you want it to follow again is here:</p>
+<pre class="sql"><code>/*
+CREATE TABLE OFFICE_LOCATION
+(ID INTEGER PRIMARY KEY,
+CITY CHAR(20),
+STATE CHAR(20),
+LAT_N INTEGER,
+LONG_W INTEGER);
+
+INSERT INTO OFFICE_LOCATION VALUES (13, &#39;Phoenix&#39;, &#39;AZ&#39;, 33, 112);
+INSERT INTO OFFICE_LOCATION VALUES (44, &#39;Denver&#39;, &#39;CO&#39;, 40, 105);
+INSERT INTO OFFICE_LOCATION VALUES (66, &#39;San Jose&#39;, &#39;CA&#39;, 47, 68);
+
+*/</code></pre>
+<p>The second table contains fake employee-location information:</p>
+<pre class="sql"><code>SELECT * 
+FROM EMPLOYEE_LOCATION
+</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-4">Table 2: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="right">EMP_ID</th>
+<th align="left">EMP_NAME</th>
+<th align="left">CITY</th>
+<th align="left">ST</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">123</td>
+<td align="left">David</td>
+<td align="left">San Francisco</td>
+<td align="left">CA</td>
+</tr>
+<tr class="even">
+<td align="right">1344</td>
+<td align="left">Sarah</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+</tr>
+<tr class="odd">
+<td align="right">664</td>
+<td align="left">Anna</td>
+<td align="left">Phoenix</td>
+<td align="left">AZ</td>
+</tr>
+<tr class="even">
+<td align="right">664</td>
+<td align="left">Paul</td>
+<td align="left">Denver</td>
+<td align="left">Co</td>
+</tr>
+<tr class="odd">
+<td align="right">664</td>
+<td align="left">Sean</td>
+<td align="left">San Joes</td>
+<td align="left">Costa Rica</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>If you want to follow along directly, here’s the queries to build this table:</p>
+<pre class="sql"><code>/*
+CREATE TABLE EMPLOYEE_LOCATION
+(EMP_ID INTEGER,
+EMP_NAME CHAR(50),
+CITY CHAR(20),
+ST CHAR (20)
+)
+INSERT INTO EMPLOYEE_LOCATION VALUES (123, &#39;David&#39;, &#39;San Francisco&#39;, &#39;CA&#39; );
+INSERT INTO EMPLOYEE_LOCATION VALUES (1344, &#39;Sarah&#39;, &#39;Denver&#39;, &#39;CO&#39;);
+INSERT INTO EMPLOYEE_LOCATION VALUES (664, &#39;Anna&#39;, &#39;Phoenix&#39;, &#39;AZ&#39;);
+INSERT INTO EMPLOYEE_LOCATION VALUES (664, &#39;Paul&#39;, &#39;Denver&#39;, &#39;CO&#39;);
+INSERT INTO EMPLOYEE_LOCATION VALUES (664, &#39;Sean&#39;, &#39;New York&#39;, &#39;NY&#39;);
+*/</code></pre>
+<p>A great cheat sheet to have on hand for SQL joins is this:</p>
+<p><img src="/img/20200527_sqlJoins/sqljoins1.jpg" /></p>
+<p>This joins image above outlines seven different joins but really they can be broken into four categories: left join, right join, inner join and outer join.</p>
+<p>First, let’s focus on the left join which are the two joins outlined in the image on the lefthandside. The only difference between these two joins is that you can use the WHERE statement to filter your output to only return records from one table. In general though, the left join is very similar. The only trick to remember is that the first table in the query (the one listed in the FROM statement) is your “base table”. In other words, all records will be returned from this table regardless of if they match to the second table. Records in the second table (the one listed in the LEFT JOIN statement) will only be returned in the output if it matches to a record in the base table.</p>
+<p>The base syntax for a left join (in which we return all fields of both tables):</p>
+<pre class="sql"><code>
+SELECT A.*, B.*
+FROM OFFICE_LOCATION A
+LEFT JOIN EMPLOYEE_LOCATION B 
+ON A.CITY = B.CITY
+</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-6">Table 3: </span>4 records</caption>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="left">CITY</th>
+<th align="left">STATE</th>
+<th align="right">LAT_N</th>
+<th align="right">LONG_W</th>
+<th align="right">EMP_ID</th>
+<th align="left">EMP_NAME</th>
+<th align="left">CITY</th>
+<th align="left">ST</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">13</td>
+<td align="left">Phoenix</td>
+<td align="left">AZ</td>
+<td align="right">33</td>
+<td align="right">112</td>
+<td align="right">664</td>
+<td align="left">Anna</td>
+<td align="left">Phoenix</td>
+<td align="left">AZ</td>
+</tr>
+<tr class="even">
+<td align="right">44</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+<td align="right">40</td>
+<td align="right">105</td>
+<td align="right">1344</td>
+<td align="left">Sarah</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+</tr>
+<tr class="odd">
+<td align="right">44</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+<td align="right">40</td>
+<td align="right">105</td>
+<td align="right">664</td>
+<td align="left">Paul</td>
+<td align="left">Denver</td>
+<td align="left">Co</td>
+</tr>
+<tr class="even">
+<td align="right">66</td>
+<td align="left">San Jose</td>
+<td align="left">CA</td>
+<td align="right">47</td>
+<td align="right">68</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In our output, you can see that the last record for the city of San Jose CA does not have any data for the final four fields. These fields are from the second table, employee_location, and so this indicates that there is not a city that matches “San Jose” in the second table. If you only want to return the records that match between both tables, you can update the query to be the following:</p>
+<pre class="sql"><code>SELECT A.*, B.*
+FROM OFFICE_LOCATION A
+LEFT JOIN EMPLOYEE_LOCATION B 
+ON A.CITY = B.CITY
+WHERE B.CITY IS NOT NULL
+</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-7">Table 4: </span>3 records</caption>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="left">CITY</th>
+<th align="left">STATE</th>
+<th align="right">LAT_N</th>
+<th align="right">LONG_W</th>
+<th align="right">EMP_ID</th>
+<th align="left">EMP_NAME</th>
+<th align="left">CITY</th>
+<th align="left">ST</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">44</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+<td align="right">40</td>
+<td align="right">105</td>
+<td align="right">1344</td>
+<td align="left">Sarah</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+</tr>
+<tr class="even">
+<td align="right">13</td>
+<td align="left">Phoenix</td>
+<td align="left">AZ</td>
+<td align="right">33</td>
+<td align="right">112</td>
+<td align="right">664</td>
+<td align="left">Anna</td>
+<td align="left">Phoenix</td>
+<td align="left">AZ</td>
+</tr>
+<tr class="odd">
+<td align="right">44</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+<td align="right">40</td>
+<td align="right">105</td>
+<td align="right">664</td>
+<td align="left">Paul</td>
+<td align="left">Denver</td>
+<td align="left">Co</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>If you only want to return the records that do <em>not</em> match, you can just remove the “NOT” from that final where clause.</p>
+<p>All other types of joins slightly vary from this syntax. A right join is identical to left join but the second table is the main table and the first table listed in the query is matched onto the second.</p>
+<p>The inner join function only returns records that match between both tables. In inner joins, it does not matter which table you put first in the query and which you put second. You can also just use the ‘JOIN’ function and SQL defaults to an inner join. Our example above with an inner join would like like the following:</p>
+<pre class="sql"><code>SELECT A.*, B.*
+FROM OFFICE_LOCATION A
+INNER JOIN EMPLOYEE_LOCATION B 
+ON A.CITY = B.CITY
+</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-8">Table 5: </span>3 records</caption>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="left">CITY</th>
+<th align="left">STATE</th>
+<th align="right">LAT_N</th>
+<th align="right">LONG_W</th>
+<th align="right">EMP_ID</th>
+<th align="left">EMP_NAME</th>
+<th align="left">CITY</th>
+<th align="left">ST</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">44</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+<td align="right">40</td>
+<td align="right">105</td>
+<td align="right">1344</td>
+<td align="left">Sarah</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+</tr>
+<tr class="even">
+<td align="right">13</td>
+<td align="left">Phoenix</td>
+<td align="left">AZ</td>
+<td align="right">33</td>
+<td align="right">112</td>
+<td align="right">664</td>
+<td align="left">Anna</td>
+<td align="left">Phoenix</td>
+<td align="left">AZ</td>
+</tr>
+<tr class="odd">
+<td align="right">44</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+<td align="right">40</td>
+<td align="right">105</td>
+<td align="right">664</td>
+<td align="left">Paul</td>
+<td align="left">Denver</td>
+<td align="left">Co</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>You can see that the left join with the where clause is idential to the output from the inner join. That’s because those queries only return the matched records between the two tables.</p>
+<p>The final type of join that I rely on regularly is a full join. The full join returns everything from both tables. In our example, it would look like this:</p>
+<pre class="sql"><code>SELECT A.*, B.*
+FROM OFFICE_LOCATION A
+FULL JOIN EMPLOYEE_LOCATION B 
+ON A.CITY = B.CITY</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-9">Table 6: </span>6 records</caption>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="left">CITY</th>
+<th align="left">STATE</th>
+<th align="right">LAT_N</th>
+<th align="right">LONG_W</th>
+<th align="right">EMP_ID</th>
+<th align="left">EMP_NAME</th>
+<th align="left">CITY</th>
+<th align="left">ST</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">13</td>
+<td align="left">Phoenix</td>
+<td align="left">AZ</td>
+<td align="right">33</td>
+<td align="right">112</td>
+<td align="right">664</td>
+<td align="left">Anna</td>
+<td align="left">Phoenix</td>
+<td align="left">AZ</td>
+</tr>
+<tr class="even">
+<td align="right">44</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+<td align="right">40</td>
+<td align="right">105</td>
+<td align="right">1344</td>
+<td align="left">Sarah</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+</tr>
+<tr class="odd">
+<td align="right">44</td>
+<td align="left">Denver</td>
+<td align="left">CO</td>
+<td align="right">40</td>
+<td align="right">105</td>
+<td align="right">664</td>
+<td align="left">Paul</td>
+<td align="left">Denver</td>
+<td align="left">Co</td>
+</tr>
+<tr class="even">
+<td align="right">66</td>
+<td align="left">San Jose</td>
+<td align="left">CA</td>
+<td align="right">47</td>
+<td align="right">68</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+</tr>
+<tr class="odd">
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">123</td>
+<td align="left">David</td>
+<td align="left">San Francisco</td>
+<td align="left">CA</td>
+</tr>
+<tr class="even">
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">664</td>
+<td align="left">Sean</td>
+<td align="left">San Joes</td>
+<td align="left">Costa Rica</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The records with no ID value but values in the later fields are from the EMPLOYEE_LOCATION table but do not match onto the first table. You can see here that San Francisco is not in the first table and San Jose is spelled wrong in the second table - hence they don’t match. However, since it is a full join, all the records even the ones without a match are included in the output.</p>
+<p>This has been a quick (and hopefully helpful!) guide to basic joins in SQL. I encourage you to keep playing around with joining on multiple fields and utilizing where clauses to filter your outputs. SQL also has super cool between joins that are great to look into if you’re joining tables with dates. Enjoy your joining!</p>

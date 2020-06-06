@@ -1,0 +1,545 @@
+---
+title: SQL Tips for Beginners
+author: Amy Linehan 
+date: '2020-05-06'
+slug: sql-tips-for-beginners
+categories:
+  - SQL
+tags:
+  - SQL
+subtitle: ''
+summary: 'Reminders, tips and tricks for programmers new to SQL and for those who just need a refresh! '
+authors: ['alinehan']
+lastmod: '2020-05-06T16:22:35-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+
+
+<p>Here I’ve complied some simple SQL tips and queries to help new programmers or anyone that needs a refresher. This is not intended to be all incompassing but just contains the things I use reguarly when viewing and filtering data in SQL. All of this information is for Microsoft SQL Server Management Studio on a PC.</p>
+<div id="select-database" class="section level3">
+<h3>Select Database</h3>
+<p>About 60% of the time that I open SQL, I go to run a query and get the following error: “Invalid object name”. After about 30 seconds of panic in which I double check my query for any typos, I realize I forgot to add that essential line at the top of my script: “USE database”. In order to use any tables or stored procedures etc. in a query that are saved in a database, you need to let your SQL server know which database you’re using within the server. You only need to run that line of code once and then you can access all tables, stored procedures etc. in that database.</p>
+</div>
+<div id="running-a-query" class="section level3">
+<h3>Running a Query</h3>
+<p>In Microsoft SQL, to run a SQL query, you can use the Excute button with the green arrow button above your query. If you just click the button, your entire query will run. If want to run certain lines of of your SQL query, you can select those lines under the shift key or highlighting them with your mouse then click execute. On your keyboard, the F5 button also works to execute your query.</p>
+</div>
+<div id="building-a-query" class="section level3">
+<h3>Building a Query</h3>
+<p>SQL queries are essentially built on the use of five verbs: SELECT, FROM, WHERE, GROUP BY AND HAVING and are built in that order:</p>
+</div>
+<div id="from" class="section level1">
+<h1>From</h1>
+<p>The “FROM” function identifies which table/view/object you want to pull data from. To reference a table/object outside of your database write “FROM SCHEMA_NAME.TABLE_NAME”.</p>
+</div>
+<div id="select" class="section level1">
+<h1>Select</h1>
+<p>SELECT indicates what you want returned in the query. If a field or calculation is not listed in the SELECT statement, it will not appear in the result of the query. If you want to return all columns, use an asterick sign ("SELECT *") as a shortcut to listing out all the column names. In the following example, the query selects two fields from the table dbo.retail_sales and outputs two other columns that are the product of the fields outputted:</p>
+<pre class="sql"><code>select  Quantity,
+        UnitPrice,
+        Quantity * UnitPrice,
+        Quantity * UnitPrice as Revenue
+from dbo.retail_sales</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 1: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="right">Quantity</th>
+<th align="right">UnitPrice</th>
+<th></th>
+<th align="right">Revenue</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">6</td>
+<td align="right">2.55</td>
+<td>15.30</td>
+<td align="right">15.30</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">3.39</td>
+<td>20.34</td>
+<td align="right">20.34</td>
+</tr>
+<tr class="odd">
+<td align="right">8</td>
+<td align="right">2.75</td>
+<td>22.00</td>
+<td align="right">22.00</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">3.39</td>
+<td>20.34</td>
+<td align="right">20.34</td>
+</tr>
+<tr class="odd">
+<td align="right">6</td>
+<td align="right">3.39</td>
+<td>20.34</td>
+<td align="right">20.34</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">7.65</td>
+<td>15.30</td>
+<td align="right">15.30</td>
+</tr>
+<tr class="odd">
+<td align="right">6</td>
+<td align="right">4.25</td>
+<td>25.50</td>
+<td align="right">25.50</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">1.85</td>
+<td>11.10</td>
+<td align="right">11.10</td>
+</tr>
+<tr class="odd">
+<td align="right">6</td>
+<td align="right">1.85</td>
+<td>11.10</td>
+<td align="right">11.10</td>
+</tr>
+<tr class="even">
+<td align="right">32</td>
+<td align="right">1.69</td>
+<td>54.08</td>
+<td align="right">54.08</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The final two fields outputted above are the exact same calculation but the final field just is renamed for a cleaner and easier to follow output. Next, let’s say you just want to glipse at a couple rows in your output because even here you can see this data goes on for almost 1,000 more rows. Tod do this, just add the word “TOP” after your SELECT statement to indicate you want to show the top X number of rows in your output (the default is 10). In the example below, the query outputs the first five rows of the table. If you delete the “5” after the word TOP,it would automatically default to returning the first ten rows of data.</p>
+<pre class="sql"><code>SELECT TOP 5 * 
+FROM dbo.retail_sales</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-3">Table 2: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="left">InvoiceNo</th>
+<th align="left">StockCode</th>
+<th align="left">Description</th>
+<th align="right">Quantity</th>
+<th align="left">InvoiceDate</th>
+<th align="right">UnitPrice</th>
+<th align="right">CustomerID</th>
+<th align="left">Country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">536365</td>
+<td align="left">85123A</td>
+<td align="left">WHITE HANGING HEART T-LIGHT HOLDER</td>
+<td align="right">6</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">2.55</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536365</td>
+<td align="left">71053</td>
+<td align="left">WHITE METAL LANTERN</td>
+<td align="right">6</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">3.39</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">536365</td>
+<td align="left">84406B</td>
+<td align="left">CREAM CUPID HEARTS COAT HANGER</td>
+<td align="right">8</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">2.75</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">536365</td>
+<td align="left">84029G</td>
+<td align="left">KNITTED UNION FLAG HOT WATER BOTTLE</td>
+<td align="right">6</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">3.39</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">536365</td>
+<td align="left">84029E</td>
+<td align="left">RED WOOLLY HOTTIE WHITE HEART.</td>
+<td align="right">6</td>
+<td align="left">2010-12-01 08:26:00.0000000</td>
+<td align="right">3.39</td>
+<td align="right">17850</td>
+<td align="left">United Kingdom</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>You can also use the key word “DISTINCT” that will return the distinct records for the fields in your select statment (ex: SELECT DISTINCT * would return the distinct rows of all fields). This function works similarly to the remove duplicates functionality in Excel.</p>
+</div>
+<div id="where" class="section level1">
+<h1>Where</h1>
+<p>Okay here is where things get fun y’all. The WHERE statement enables you to filter your data. Similar to filters in other programming languages, you can apply conditional filtering using “AND” and “OR”. Viewing data is great but filtering is really when you get to play around. The key to filtering in SQL (and honestly most other programming languages) is remembering PEMDAS and making sure your parentheses are not only placed in the right location but that you’re not missing any closed paranetheses. This is one of the most common mistakes I make when querying so if you’re getting an error make sure to double check that everything is in the right place and closed.</p>
+<p>In the two examples below, you can see that the query intends to focus on two invoice numbers and filter to only show records where the unit price is less than 2.00. However, the second example does not use the parentheses and in its output, you can see two records where the unit price is greater than 2 because the calculation moves from left to right so the only filter on these two records is InvoiceNo = 537446.</p>
+<pre class="sql"><code>SELECT top 5 * 
+FROM dbo.retail_sales
+where unitPrice &lt; 2.00 and (invoiceno = &#39;536365&#39; OR InvoiceNo = &#39;537446&#39;)
+</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-4">Table 3: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="left">InvoiceNo</th>
+<th align="left">StockCode</th>
+<th align="left">Description</th>
+<th align="right">Quantity</th>
+<th align="left">InvoiceDate</th>
+<th align="right">UnitPrice</th>
+<th align="right">CustomerID</th>
+<th align="left">Country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">537446</td>
+<td align="left">21135</td>
+<td align="left">VICTORIAN METAL POSTCARD SPRING</td>
+<td align="right">8</td>
+<td align="left">2010-12-07 09:13:00.0000000</td>
+<td align="right">1.69</td>
+<td align="right">18055</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">537446</td>
+<td align="left">21397</td>
+<td align="left">BLUE POLKADOT EGG CUP</td>
+<td align="right">12</td>
+<td align="left">2010-12-07 09:13:00.0000000</td>
+<td align="right">1.25</td>
+<td align="right">18055</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">537446</td>
+<td align="left">22948</td>
+<td align="left">METAL DECORATION NAUGHTY CHILDREN</td>
+<td align="right">24</td>
+<td align="left">2010-12-07 09:13:00.0000000</td>
+<td align="right">0.85</td>
+<td align="right">18055</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">537446</td>
+<td align="left">46000M</td>
+<td align="left">POLYESTER FILLER PAD 45x45cm</td>
+<td align="right">2</td>
+<td align="left">2010-12-07 09:13:00.0000000</td>
+<td align="right">1.55</td>
+<td align="right">18055</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">537446</td>
+<td align="left">72741</td>
+<td align="left">GRAND CHOCOLATECANDLE</td>
+<td align="right">18</td>
+<td align="left">2010-12-07 09:13:00.0000000</td>
+<td align="right">1.45</td>
+<td align="right">18055</td>
+<td align="left">United Kingdom</td>
+</tr>
+</tbody>
+</table>
+</div>
+<pre class="sql"><code>SELECT top 5 * 
+FROM dbo.retail_sales
+where unitPrice &lt; 2.00 and invoiceno = &#39;536365&#39; OR InvoiceNo = &#39;537446&#39;
+</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-5">Table 4: </span>5 records</caption>
+<thead>
+<tr class="header">
+<th align="left">InvoiceNo</th>
+<th align="left">StockCode</th>
+<th align="left">Description</th>
+<th align="right">Quantity</th>
+<th align="left">InvoiceDate</th>
+<th align="right">UnitPrice</th>
+<th align="right">CustomerID</th>
+<th align="left">Country</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">537446</td>
+<td align="left">20782</td>
+<td align="left">CAMOUFLAGE EAR MUFF HEADPHONES</td>
+<td align="right">4</td>
+<td align="left">2010-12-07 09:13:00.0000000</td>
+<td align="right">5.49</td>
+<td align="right">18055</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">537446</td>
+<td align="left">21135</td>
+<td align="left">VICTORIAN METAL POSTCARD SPRING</td>
+<td align="right">8</td>
+<td align="left">2010-12-07 09:13:00.0000000</td>
+<td align="right">1.69</td>
+<td align="right">18055</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">537446</td>
+<td align="left">21175</td>
+<td align="left">GIN + TONIC DIET METAL SIGN</td>
+<td align="right">12</td>
+<td align="left">2010-12-07 09:13:00.0000000</td>
+<td align="right">2.10</td>
+<td align="right">18055</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="even">
+<td align="left">537446</td>
+<td align="left">21397</td>
+<td align="left">BLUE POLKADOT EGG CUP</td>
+<td align="right">12</td>
+<td align="left">2010-12-07 09:13:00.0000000</td>
+<td align="right">1.25</td>
+<td align="right">18055</td>
+<td align="left">United Kingdom</td>
+</tr>
+<tr class="odd">
+<td align="left">537446</td>
+<td align="left">21411</td>
+<td align="left">GINGHAM HEART DOORSTOP RED</td>
+<td align="right">3</td>
+<td align="left">2010-12-07 09:13:00.0000000</td>
+<td align="right">4.25</td>
+<td align="right">18055</td>
+<td align="left">United Kingdom</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="group-by" class="section level1">
+<h1>Group By</h1>
+<p>The group by statement allows you to group the data by at least one field and then output calculations based off that grouping. The most common calculations that I use regularly are max(), min() and count(). Min and max both return the smallest or largest value respectively of hte field provided by the fields grouped by. For example, in our sample data, grouping by the InvoiceNo and returning the max(UnitPrice) would return the largest unit price of an item sold in each invoiceNo. Let’s look at some examples:</p>
+<pre class="sql"><code>
+SELECT InvoiceNo , InvoiceDate, max(unitprice) as highest_price
+FROM dbo.retail_sales
+GROUP BY InvoiceNo , InvoiceDate
+</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-6">Table 5: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="left">InvoiceNo</th>
+<th align="left">InvoiceDate</th>
+<th align="right">highest_price</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">561521</td>
+<td align="left">2011-07-27 17:06:00.0000000</td>
+<td align="right">4.65</td>
+</tr>
+<tr class="even">
+<td align="left">544582</td>
+<td align="left">2011-02-21 14:38:00.0000000</td>
+<td align="right">5.75</td>
+</tr>
+<tr class="odd">
+<td align="left">569493</td>
+<td align="left">2011-10-04 13:35:00.0000000</td>
+<td align="right">12.50</td>
+</tr>
+<tr class="even">
+<td align="left">C551463</td>
+<td align="left">2011-04-28 16:13:00.0000000</td>
+<td align="right">10.40</td>
+</tr>
+<tr class="odd">
+<td align="left">553466</td>
+<td align="left">2011-05-17 11:10:00.0000000</td>
+<td align="right">0.72</td>
+</tr>
+<tr class="even">
+<td align="left">561060</td>
+<td align="left">2011-07-24 13:30:00.0000000</td>
+<td align="right">4.15</td>
+</tr>
+<tr class="odd">
+<td align="left">565328</td>
+<td align="left">2011-09-02 13:50:00.0000000</td>
+<td align="right">8.50</td>
+</tr>
+<tr class="even">
+<td align="left">C577815</td>
+<td align="left">2011-11-22 09:16:00.0000000</td>
+<td align="right">4.95</td>
+</tr>
+<tr class="odd">
+<td align="left">551888</td>
+<td align="left">2011-05-05 09:29:00.0000000</td>
+<td align="right">12.75</td>
+</tr>
+<tr class="even">
+<td align="left">C571336</td>
+<td align="left">2011-10-17 11:43:00.0000000</td>
+<td align="right">3.75</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A useful trick is using the count(*) or count(distinct FIELD_NAME) functions as the aggregate in a group by query to get the row count for each group:</p>
+<pre class="sql"><code>
+SELECT InvoiceNo , count(distinct stockcode) as product_ct
+FROM dbo.retail_sales
+GROUP BY InvoiceNo 
+</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-7">Table 6: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="left">InvoiceNo</th>
+<th align="right">product_ct</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">536365</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">536366</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">536367</td>
+<td align="right">12</td>
+</tr>
+<tr class="even">
+<td align="left">536368</td>
+<td align="right">4</td>
+</tr>
+<tr class="odd">
+<td align="left">536369</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">536370</td>
+<td align="right">20</td>
+</tr>
+<tr class="odd">
+<td align="left">536371</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
+<td align="left">536372</td>
+<td align="right">2</td>
+</tr>
+<tr class="odd">
+<td align="left">536373</td>
+<td align="right">16</td>
+</tr>
+<tr class="even">
+<td align="left">536374</td>
+<td align="right">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="having" class="section level1">
+<h1>Having</h1>
+<p>The final verb, HAVING, is similar to a where clause in that it filters data, but HAVING is only utilized when you have a group by statement. If you have a grouped query and want to filter it, you can use the HAVING statement to filter the rows of your output.</p>
+<p>For example, if we add on to our previous example where we calculated the number of distinct products in each invoice to only return invoices with more than 10 products we would do the following:</p>
+<pre class="sql"><code>
+SELECT InvoiceNo ,  COUNT(DISTINCT stockcode) as product_ct
+FROM dbo.retail_sales
+GROUP BY InvoiceNo 
+HAVING COUNT(DISTINCT stockcode) &gt; 10
+</code></pre>
+<div class="knitsql-table">
+<table>
+<caption><span id="tab:unnamed-chunk-8">Table 7: </span>Displaying records 1 - 10</caption>
+<thead>
+<tr class="header">
+<th align="left">InvoiceNo</th>
+<th align="right">product_ct</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">536367</td>
+<td align="right">12</td>
+</tr>
+<tr class="even">
+<td align="left">536370</td>
+<td align="right">20</td>
+</tr>
+<tr class="odd">
+<td align="left">536373</td>
+<td align="right">16</td>
+</tr>
+<tr class="even">
+<td align="left">536375</td>
+<td align="right">16</td>
+</tr>
+<tr class="odd">
+<td align="left">536378</td>
+<td align="right">19</td>
+</tr>
+<tr class="even">
+<td align="left">536381</td>
+<td align="right">34</td>
+</tr>
+<tr class="odd">
+<td align="left">536382</td>
+<td align="right">12</td>
+</tr>
+<tr class="even">
+<td align="left">536384</td>
+<td align="right">13</td>
+</tr>
+<tr class="odd">
+<td align="left">536388</td>
+<td align="right">14</td>
+</tr>
+<tr class="even">
+<td align="left">536389</td>
+<td align="right">14</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>This has hopfeully been a useful quick overview of how to build queries in SQL and how to get started. Next up, I’m going to write up how to do simple joins in SQL so you can link your tables together.</p>
+</div>

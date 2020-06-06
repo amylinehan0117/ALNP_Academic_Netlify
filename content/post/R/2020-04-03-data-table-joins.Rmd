@@ -1,5 +1,5 @@
 ---
-title: data.table Joins
+title: Joins in Data.Table
 author: Amy Linehan
 authors: ["alinehan"]
 date: '2020-04-03'
@@ -7,8 +7,7 @@ slug: data-table-joins
 categories: ["R"]
 tags: ["R"]
 subtitle: ''
-summary: ''
-
+summary: 'An introduction to joins using the data.table package in R!'
 lastmod: '2020-04-03T13:01:16-07:00'
 featured: no
 image:
@@ -18,9 +17,9 @@ image:
 projects: []
 ---
 
-Although I've used the data.table package regularly for almost two years now, I still find myself converting my objects into data frames for joins. Part of this is definitely just laziness, so I figured writing about joins in data.table would help me understand and remember the syntax better moving forward.
+Although I've used the data.table package regularly for almost two years now, I still find myself converting my objects into data frames for joins. Part of this is definitely just laziness, so I figured writing about joins in data.table would help me understand and remember the syntax better moving forward (I'll keep you updated on if that actually happens). 
 
-I'm going to rely on the mtcars dataset and a made-up data set of people's cars to demonstrate the different types of joins:
+I'm going to rely on the mtcars dataset and a made-up data set of people's cars to demonstrate the different types of joins. Here's how I'm building my data for those who want to follow along: 
 
 ```{r}
 require(dplyr)

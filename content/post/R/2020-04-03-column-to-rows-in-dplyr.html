@@ -6,7 +6,7 @@ date: '2020-02-18'
 slug: column-to-rows-in-dplyr
 categories: ["R"]
 tags: ["R"]
-subtitle: ''
+subtitle: 'Details and examples on separating data in dplyr'
 summary: ''
 lastmod: '2020-04-03T12:35:17-07:00'
 featured: no
@@ -23,7 +23,6 @@ projects: []
 <pre class="r"><code>df &lt;- data.frame(groupid = c(0001,0002,0003,0004,0005), 
                  userid = c(&quot;448,938,483,594,595&quot;,
                             &quot;121&quot;, &quot;823&quot;, &quot;765, 089&quot;, &quot;120, 982, 843&quot;))
-
 head(df)</code></pre>
 <pre><code>##   groupid              userid
 ## 1       1 448,938,483,594,595
@@ -87,7 +86,7 @@ head(df)</code></pre>
 <p>Anddd…. as usual the internet came through! A quick Google search pointed me towards a tidyr function called separate_rows. This function does exactly what I was hoping to do and is really efficient and simple to use.</p>
 <p>The tidyr documentation for this function is concise and helpful and what I relied on for this post. If you have any further questions about the details or functionality of separate_rows definitely check it out: <a href="https://tidyr.tidyverse.org/reference/separate_rows.html" class="uri">https://tidyr.tidyverse.org/reference/separate_rows.html</a></p>
 <p>For my example, getting the data to a long, two-column set was super simple:</p>
-<pre class="r"><code>df %&gt;% separate_rows(userid)</code></pre>
+<pre class="r"><code>df %&gt;% separate_rows(userid) </code></pre>
 <pre><code>##    groupid userid
 ## 1        1    448
 ## 2        1    938
@@ -112,3 +111,5 @@ head(df)</code></pre>
 ## 3       3     1
 ## 4       4     2
 ## 5       5     3</code></pre>
+<p>Honestly this is why regardless of how much time I spend programming in other languages and packages for work, I always come back to dplyr whenever possible. There is usually a function for exactly what I need and it’s more often than not easy to use and understand. Dplyr is not perfect but on days like today it definitely came thorugh for me!</p>
+<p><img src="https://media.giphy.com/media/Is1O1TWV0LEJi/giphy.gif" /></p>
