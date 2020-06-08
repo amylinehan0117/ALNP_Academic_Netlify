@@ -7,7 +7,7 @@ slug: column-to-rows-in-dplyr
 categories: ["R"]
 tags: ["R"]
 subtitle: 'Details and examples on separating data in dplyr'
-summary: ''
+summary: 'Details and examples on separating data in dplyr'
 lastmod: '2020-04-03T12:35:17-07:00'
 featured: no
 image:
