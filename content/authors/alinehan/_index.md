@@ -41,7 +41,7 @@ superuser: yes
 user_groups: ["The Crew"]
 ---
 
-Currently working as a Data & Analytics consultant in Los Angeles, Amy graduated from UCLA with a degree in Math/Economics. She started programming as during an internship at a consulting firm in university and hasn't stopped since. She can usually be found with a large amount of iced coffee nearby. 
+Currently working as a Data & Analytics consultant in Los Angeles, Amy graduated from UCLA with a degree in Math and Economics. She started programming during an internship at a consulting firm in university and hasn't stopped since. She can usually be found with a large amount of iced coffee nearby. 
 
 
 
