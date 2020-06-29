@@ -1,0 +1,81 @@
+---
+title: 'Using R to Program in SQL '
+author: Amy Linehan
+date: '2020-06-11'
+slug: using-r-to-program-in-sql
+categories:
+  - R
+  - SQL
+tags:
+  - R
+  - SQL
+  - dplyr
+subtitle: ''
+summary: 'BOGO Writing SQL and updating SQL databases in R'
+authors: ['alinehan']
+lastmod: '2020-06-08T15:41:31-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+Last week I was chatting with a coworker (over Skype because #2020quaratine & I never leave my apartment anymore) and we both agreed that the hardest task to recieve is "hey can you load this data into SQL?". It doesn't matter how many times we do it or how good we are at programming, this task is tough. It should be straightforward but even the most simple of data ends up with at least one error. As a result, after a while I realized there had to be an easier way addressing periodic tasks that needed data loaded into SQL. 
+
+For example, a project I recently worked on needed us to update a table in a SQL database on a weekly basis with the data from the previous week. So, every Monday, I had to load in the new data into SQL and then union it with the complete table containing all of our data. Instead of just loading the data into SQL (which if I'm being honest would have taken at least 15 minutes) and the unioning in it SQL, I built a Python script that loaded in the data via Python (which takes less than a couple seconds) and then updated my SQL table in the Python script. You can also do this in R and for tasks like this where you don't need the table you're loading in to be saved in your database, it's a really convient trick.
+
+Whether you're doing it in Python, R, or another language, the general gist is the same. Within your script, you open up a connection to your SQL database and then write your SQL code within the R/Python script. 
+
+Here is how I set up the connection to a database. For the purpose of this post, I'm going to be connecting to Microsoft SQL Server and my SQL express server account.  In the following query, we set up the connection to the SQL database that we want to use using the odbc and DBI libraries: 
+
+```{r setup, message=F}
+library(dplyr)
+library(dbplyr)
+library(DBI)
+library(odbc)
+con <- dbConnect(odbc::odbc(), 
+                Driver = "SQL Server",
+                Server = "LAALINEHAN\\SQLEXPRESS",
+                Database = "alinehan",
+                Trusted_connection = "True")
+
+```
+
+
+To query your data in SQL within your R script, you can use the dbGetQuery() function. Here's a simple example of selecting some data from my SQL database:
+
+```{r}
+dbGetQuery(conn = con, statement = '
+select top 10 * 
+from dbo.retail_sales
+'
+)
+```
+
+
+If you want to use data from your R environment with your SQL connection you can use the paste function to build your query alongside your R objects and variables: 
+
+
+```{r}
+num <- 536365
+
+dbGetQuery(conn = con, statement = paste0('
+select * 
+from dbo.retail_sales
+where InvoiceNo = \'', num , '\'') 
+)
+
+```
+
+The query above can easly be adapated for an update statement to solve my problem above of contnuously updating a SQL table. 
+
+
+
+
+
+
+
+
+
