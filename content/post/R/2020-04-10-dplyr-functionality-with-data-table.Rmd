@@ -19,6 +19,7 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
+draft: True 
 ---
 
 For the first year of my career as a consultant, my manager wrote his scripts in data.table and I somehow avoided ever having to really understand what the heck he was doing. It took a full year, but eventually I started understanding and using data.table in my scripts. Now, don't get me wrong I'm definitely still a tidyverse girl and prefer ctrl+alt+m to brackets any day. But, I can't deny that there are situations where using data table is faster, easier and cleaner.
@@ -27,9 +28,12 @@ The goal of this post is to consolidate all the common dplyr code I rely on regu
 
 1. Mutate (add a new flag indicating if mpg is over 20)
 
-```{r}
+```{r, eval=T, message=F, include=F}
 require(dplyr)
 require(data.table)
+```
+
+```{r}
 cars <- mtcars %>% tibble::rownames_to_column(var="car_type")
 
 #dplyr

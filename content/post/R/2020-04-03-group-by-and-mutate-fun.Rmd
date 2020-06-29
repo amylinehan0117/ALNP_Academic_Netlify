@@ -57,6 +57,7 @@ data <- as.data.table(data)
 
 data[, Location_Rank := seq_len(.N), by = Location]
 data[, Location_Rank := rowid(Location)]
+print(data)
 
 ```
 

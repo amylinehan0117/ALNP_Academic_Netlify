@@ -1,20 +1,21 @@
 ---
 title: 'Regular Expressions: Look Arounds'
-author: Amy Linehan
-authors: ["alinehan"]
+author: "Amy Linehan"
 date: '2020-04-03'
-slug: regular-expressions-look-arounds
-categories: ["R"]
-tags: ["R"]
-subtitle: ''
-summary: 'Learn how to use look arounds and regular expressions to clean data and parse strings'
-lastmod: '2020-04-03T12:33:18-07:00'
+categories: R
 featured: no
 image:
   caption: ''
   focal_point: ''
   preview_only: no
+lastmod: '2020-04-03T12:33:18-07:00'
 projects: []
+slug: regular-expressions-look-arounds
+subtitle: ''
+summary: Learn how to use look arounds and regular expressions to clean data and parse
+  strings
+tags: R
+authors: alinehan
 ---
 
 
@@ -55,42 +56,34 @@ projects: []
 <h1>Lookaheads</h1>
 <p>First, we’ll start with lookaheads. Positive lookaheads matches at a position where the pattern inside the lookahead can be matched. Negative lookaheads do the same but identify where the pattern fails to match.</p>
 <p>Positive lookaheads are denoated by (?= pattern) and negative lookaheads are denoted by (?! pattern). For example, the positive lookahead t(?=s) matches the second t in the word “streets” since the second t is followed by an s whereas the first t is not. Similarly, the negative lookahead t(?!s) would match the first t in streets since it is not followed by an s.</p>
-<pre class="r"><code>print(&#39;Positive Lookahead:&#39;)</code></pre>
-<pre><code>## [1] &quot;Positive Lookahead:&quot;</code></pre>
-<pre class="r"><code>str_extract(&quot;streets&quot;, &quot;t(?=s)&quot;)</code></pre>
+<pre class="r"><code># Positive Lookahead:
+str_extract(&quot;streets&quot;, &quot;t(?=s)&quot;)</code></pre>
 <pre><code>## [1] &quot;t&quot;</code></pre>
 <pre class="r"><code>str_locate(&quot;streets&quot;,&quot;t(?=s)&quot;)[1]</code></pre>
 <pre><code>## [1] 6</code></pre>
-<pre class="r"><code>print (&quot;This returns the second t in streets located at position 6 since this t is followed by an s&quot;)</code></pre>
-<pre><code>## [1] &quot;This returns the second t in streets located at position 6 since this t is followed by an s&quot;</code></pre>
-<pre class="r"><code>print(&quot;Negative Lookahead:&quot;)</code></pre>
-<pre><code>## [1] &quot;Negative Lookahead:&quot;</code></pre>
-<pre class="r"><code>str_extract(&quot;streets&quot;,&quot;t(?!s)&quot;)</code></pre>
+<pre class="r"><code>#This returns the second t in streets located at position 6 since this t is followed by an s</code></pre>
+<pre class="r"><code>#Negative Lookahead:
+str_extract(&quot;streets&quot;,&quot;t(?!s)&quot;)</code></pre>
 <pre><code>## [1] &quot;t&quot;</code></pre>
 <pre class="r"><code>str_locate(&quot;streets&quot;,&quot;t(?!s)&quot;)[1]</code></pre>
 <pre><code>## [1] 2</code></pre>
-<pre class="r"><code>print (&quot;This returns the first t in streets located at position 2 since this t is not followed by an s&quot;)</code></pre>
-<pre><code>## [1] &quot;This returns the first t in streets located at position 2 since this t is not followed by an s&quot;</code></pre>
+<pre class="r"><code>#This returns the first t in streets located at position 2 since this t is not followed by an s</code></pre>
 </div>
 <div id="lookbehinds" class="section level1">
 <h1>Lookbehinds</h1>
 <p>Positive lookbehinds matches at a position if the pattern inside the lookbehind can be matched directly before the pattern. In our example, (?&lt;=s)t would match the first t in streets since there is an “s” directly before the first t in streets.</p>
 <p>Negative lookbehinds
-Similarly, negative lookbehinds tells the regex program to look backwards in the string to see if the pattern is not matched. In our exmaple, (?&lt;!s) matches the second t since it does not have an s in front of it.</p>
-<pre class="r"><code>print(&#39;Positive Lookbehind:&#39;)</code></pre>
-<pre><code>## [1] &quot;Positive Lookbehind:&quot;</code></pre>
-<pre class="r"><code>str_extract(&quot;streets&quot;, &quot;(?&lt;=s)t&quot;)</code></pre>
+Similarly, negative lookbehinds tells the regex program to look backwards in the string to see if the pattern is not matched. In our example, (?&lt;!s) matches the second t since it does not have an s in front of it.</p>
+<pre class="r"><code>#Positive Lookbehind:
+str_extract(&quot;streets&quot;, &quot;(?&lt;=s)t&quot;)</code></pre>
 <pre><code>## [1] &quot;t&quot;</code></pre>
 <pre class="r"><code>str_locate(&quot;streets&quot;,&quot;(?&lt;=s)t&quot;)[1]</code></pre>
 <pre><code>## [1] 2</code></pre>
-<pre class="r"><code>print (&quot;This returns the first t in streets located at position 2 since this t follows an s&quot;)</code></pre>
-<pre><code>## [1] &quot;This returns the first t in streets located at position 2 since this t follows an s&quot;</code></pre>
-<pre class="r"><code>print(&quot;Negative Lookahead:&quot;)</code></pre>
-<pre><code>## [1] &quot;Negative Lookahead:&quot;</code></pre>
-<pre class="r"><code>str_extract(&quot;streets&quot;,&quot;(?&lt;!s)t&quot;)</code></pre>
+<pre class="r"><code>#This returns the first t in streets located at position 2 since this t follows an s</code></pre>
+<pre class="r"><code>#Negative Lookbehind: 
+str_extract(&quot;streets&quot;,&quot;(?&lt;!s)t&quot;)</code></pre>
 <pre><code>## [1] &quot;t&quot;</code></pre>
 <pre class="r"><code>str_locate(&quot;streets&quot;,&quot;(?&lt;!s)t&quot;)[1]</code></pre>
 <pre><code>## [1] 6</code></pre>
-<pre class="r"><code>print (&quot;This returns the second t in streets located at position 6 since this t does not follow an s&quot;)</code></pre>
-<pre><code>## [1] &quot;This returns the second t in streets located at position 6 since this t does not follow an s&quot;</code></pre>
+<pre class="r"><code>#This returns the second t in streets located at position 6 since this t does not follow an s</code></pre>
 </div>

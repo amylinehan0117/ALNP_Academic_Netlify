@@ -1,20 +1,21 @@
 ---
 title: 'Regular Expressions: Look Arounds'
-author: Amy Linehan
-authors: ["alinehan"]
+author: "Amy Linehan"
 date: '2020-04-03'
-slug: regular-expressions-look-arounds
-categories: ["R"]
-tags: ["R"]
-subtitle: ''
-summary: 'Learn how to use look arounds and regular expressions to clean data and parse strings'
-lastmod: '2020-04-03T12:33:18-07:00'
+categories: R
 featured: no
 image:
   caption: ''
   focal_point: ''
   preview_only: no
+lastmod: '2020-04-03T12:33:18-07:00'
 projects: []
+slug: regular-expressions-look-arounds
+subtitle: ''
+summary: Learn how to use look arounds and regular expressions to clean data and parse
+  strings
+tags: R
+authors: alinehan
 ---
 
 ```{r setup, include=FALSE}
@@ -47,16 +48,17 @@ First, we'll start with lookaheads. Positive lookaheads matches at a position wh
 Positive lookaheads are denoated by (?= pattern) and negative lookaheads are denoted by (?! pattern). For example, the positive lookahead t(?=s) matches the second t in the word "streets" since the second t is followed by an s whereas the first t is not. Similarly, the negative lookahead t(?!s) would match the first t in streets since it is not followed by an s. 
 
 ```{r }
-print('Positive Lookahead:')
+# Positive Lookahead:
 str_extract("streets", "t(?=s)")
 str_locate("streets","t(?=s)")[1]
-print ("This returns the second t in streets located at position 6 since this t is followed by an s")
+#This returns the second t in streets located at position 6 since this t is followed by an s
+
 ```
 ```{r}
-print("Negative Lookahead:")
+#Negative Lookahead:
 str_extract("streets","t(?!s)")
 str_locate("streets","t(?!s)")[1]
-print ("This returns the first t in streets located at position 2 since this t is not followed by an s")
+#This returns the first t in streets located at position 2 since this t is not followed by an s
 
 ```
 
@@ -65,19 +67,32 @@ print ("This returns the first t in streets located at position 2 since this t i
 Positive lookbehinds matches at a position if the pattern inside the lookbehind can be matched directly before the pattern. In our example, (?<=s)t would match the first t in streets since there is an "s" directly before the first t in streets. 
  
 Negative lookbehinds 
-Similarly, negative lookbehinds tells the regex program to look backwards in the string to see if the pattern is not matched. In our exmaple, (?<!s) matches the second t since it does not have an s in front of it.
-
+Similarly, negative lookbehinds tells the regex program to look backwards in the string to see if the pattern is not matched. In our example, (?<!s) matches the second t since it does not have an s in front of it.
 
 ```{r }
-print('Positive Lookbehind:')
+#Positive Lookbehind:
 str_extract("streets", "(?<=s)t")
 str_locate("streets","(?<=s)t")[1]
-print ("This returns the first t in streets located at position 2 since this t follows an s")
+#This returns the first t in streets located at position 2 since this t follows an s
 ```
 ```{r}
-print("Negative Lookahead:")
+#Negative Lookbehind: 
 str_extract("streets","(?<!s)t")
 str_locate("streets","(?<!s)t")[1]
-print ("This returns the second t in streets located at position 6 since this t does not follow an s")
+#This returns the second t in streets located at position 6 since this t does not follow an s
 
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+

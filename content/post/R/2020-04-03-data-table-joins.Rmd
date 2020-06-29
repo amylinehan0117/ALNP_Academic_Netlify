@@ -21,10 +21,15 @@ Although I've used the data.table package regularly for almost two years now, I 
 
 I'm going to rely on the mtcars dataset and a made-up data set of people's cars to demonstrate the different types of joins. Here's how I'm building my data for those who want to follow along: 
 
-```{r}
+
+```{r, eval = T, include= F, message=F}
 require(dplyr)
 require(data.table)
 
+```
+
+
+```{r}
 cars <- mtcars %>% tibble::rownames_to_column(var="car_type") %>% select(car_type, mpg) %>% as.data.table()
 head(cars)
 
@@ -38,9 +43,7 @@ friends_cars <- data.frame(friends,cars_models) %>%
 head(friends_cars)
 
 ```
- 
-
-# Types of Joins
+ # Types of Joins
 
 Data.table joins are based on the same premise as SQL joins. The syntax of data.table joins is very simple:
 

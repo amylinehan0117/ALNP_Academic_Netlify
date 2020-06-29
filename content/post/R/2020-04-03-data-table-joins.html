@@ -21,23 +21,6 @@ projects: []
 
 <p>Although I’ve used the data.table package regularly for almost two years now, I still find myself converting my objects into data frames for joins. Part of this is definitely just laziness, so I figured writing about joins in data.table would help me understand and remember the syntax better moving forward (I’ll keep you updated on if that actually happens).</p>
 <p>I’m going to rely on the mtcars dataset and a made-up data set of people’s cars to demonstrate the different types of joins. Here’s how I’m building my data for those who want to follow along:</p>
-<pre class="r"><code>require(dplyr)</code></pre>
-<pre><code>## Loading required package: dplyr</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>require(data.table)</code></pre>
-<pre><code>## Loading required package: data.table</code></pre>
-<pre><code>## 
-## Attaching package: &#39;data.table&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
-## 
-##     between, first, last</code></pre>
 <pre class="r"><code>cars &lt;- mtcars %&gt;% tibble::rownames_to_column(var=&quot;car_type&quot;) %&gt;% select(car_type, mpg) %&gt;% as.data.table()
 head(cars)</code></pre>
 <pre><code>##             car_type  mpg
@@ -71,14 +54,12 @@ friends_cars &lt;- data.frame(friends,cars_models) %&gt;%
 ## 2:    Drake  Honda Civic
 ## 3:       JP    Fiat X1-9
 ## 4:     Lily    Smart Car</code></pre>
-<div id="types-of-joins" class="section level1">
-<h1>Types of Joins</h1>
+<p># Types of Joins</p>
 <p>Data.table joins are based on the same premise as SQL joins. The syntax of data.table joins is very simple:</p>
 <p>Join Type | Syntax
 Left Join | Y[X]
 Right Join | X[Y,]
 Inner Join | X[Y, nomatch=0]</p>
-</div>
 <div id="set-key" class="section level1">
 <h1>Set Key</h1>
 <p>Unlike joining using dplyr or merge, data.table joins determined the on/using clause by setting the keys of the table using the setkey() function. This honestly is the part that turns me off using data.table joins regularly because I always forgot to do this. But, it is a quick and simple step.</p>

@@ -19,6 +19,7 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
+draft: True 
 ---
 
 
@@ -28,23 +29,6 @@ projects: []
 <ol style="list-style-type: decimal">
 <li>Mutate (add a new flag indicating if mpg is over 20)</li>
 </ol>
-<pre class="r"><code>require(dplyr)</code></pre>
-<pre><code>## Loading required package: dplyr</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<pre class="r"><code>require(data.table)</code></pre>
-<pre><code>## Loading required package: data.table</code></pre>
-<pre><code>## 
-## Attaching package: &#39;data.table&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:dplyr&#39;:
-## 
-##     between, first, last</code></pre>
 <pre class="r"><code>cars &lt;- mtcars %&gt;% tibble::rownames_to_column(var=&quot;car_type&quot;)
 
 #dplyr

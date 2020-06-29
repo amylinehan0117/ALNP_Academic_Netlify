@@ -62,5 +62,17 @@ print(data)</code></pre>
 <pre class="r"><code>data &lt;- as.data.table(data)
 
 data[, Location_Rank := seq_len(.N), by = Location]
-data[, Location_Rank := rowid(Location)]</code></pre>
+data[, Location_Rank := rowid(Location)]
+print(data)</code></pre>
+<pre><code>##          Location Age Location_Rank
+##  1:   Los Angeles  13             1
+##  2: San Francisco  24             1
+##  3:   Los Angeles  13             2
+##  4:      New York  24             1
+##  5:      New York  25             2
+##  6:      New York  18             3
+##  7:   Los Angeles  17             3
+##  8:      New York   4             4
+##  9:      New York  29             5
+## 10:   Los Angeles  13             4</code></pre>
 <p>Other useful functions to use alongside group by and mutate are lag, lead and cumsum.</p>
