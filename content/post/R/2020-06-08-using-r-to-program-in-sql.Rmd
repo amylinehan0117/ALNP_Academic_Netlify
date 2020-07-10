@@ -1,7 +1,7 @@
 ---
 title: 'Using R to Program in SQL '
 author: Amy Linehan
-date: '2020-06-11'
+date: '2020-07-09'
 slug: using-r-to-program-in-sql
 categories:
   - R
@@ -24,7 +24,7 @@ projects: []
 
 Last week I was chatting with a coworker (over Skype because #2020quaratine & I never leave my apartment anymore) and we both agreed that the hardest task to recieve is "hey can you load this data into SQL?". It doesn't matter how many times we do it or how good we are at programming, this task is tough. It should be straightforward but even the most simple of data ends up with at least one error. As a result, after a while I realized there had to be an easier way addressing periodic tasks that needed data loaded into SQL. 
 
-For example, a project I recently worked on needed us to update a table in a SQL database on a weekly basis with the data from the previous week. So, every Monday, I had to load in the new data into SQL and then union it with the complete table containing all of our data. Instead of just loading the data into SQL (which if I'm being honest would have taken at least 15 minutes) and the unioning in it SQL, I built a Python script that loaded in the data via Python (which takes less than a couple seconds) and then updated my SQL table in the Python script. You can also do this in R and for tasks like this where you don't need the table you're loading in to be saved in your database, it's a really convient trick.
+For example, a project I recently worked on needed us to update a table in a SQL database on a weekly basis with the data from the previous week. So, every Monday, I had to load in the new data into SQL and then union it with the complete table containing all of our data. Instead of just loading the data into SQL (which if I'm being honest would have taken at least 15 minutes) and the unioning in it SQL, I built a Python script that loaded in the data via Python (which takes less than a couple seconds) and then updated my SQL table in the Python script. You can also do this in R and for tasks like this where you don't need the table you're loading in to be saved in your database, it's a really useful trick.
 
 Whether you're doing it in Python, R, or another language, the general gist is the same. Within your script, you open up a connection to your SQL database and then write your SQL code within the R/Python script. 
 
@@ -69,7 +69,7 @@ where InvoiceNo = \'', num , '\'')
 
 ```
 
-The query above can easly be adapated for an update statement to solve my problem above of contnuously updating a SQL table. 
+The query above can easly be adapted for an update statement to solve my problem above of continuously updating a SQL table. 
 
 
 
