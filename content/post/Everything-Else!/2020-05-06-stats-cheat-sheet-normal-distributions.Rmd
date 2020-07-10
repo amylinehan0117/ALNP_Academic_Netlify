@@ -30,7 +30,12 @@ Function  | Description
 ------------- | -------------
 dnorm(x, mean = 0, sd = 1, log = FALSE) | Returns the density 
 rnorm(n, mean = 0, sd =1) | Returns random deviates 
-pnrom(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) | 
+pnrom(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE) | Returns the distribution function
+qnorm(p, mean=0,sd=1, lower.tail = TRUE, log.p = FALSE) |  Returns the quantile function 
+
+The length of an rnorm function is determined by n and for the other three functions is the maximum of the lengths of their numeric arguments. 
+
+
 
 
 
