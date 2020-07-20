@@ -7,6 +7,9 @@ authors:
 - nponarul
 education:
   courses:
+  - course: SM Health Data Science
+    institution: Harvard T.H. Chan School of Public Health
+    year: 2022
   - course: BSc in Applied Mathematics
     institution: UCLA
     year: 2017
@@ -34,4 +37,4 @@ user_groups: ["The Crew"]
 ---
 
 
-Nellie is a data analytics consultant with a special interest in data science for healthcare. Never far from a musical instrument or a cup of hot coffee.
+Nellie is an incoming Master's student at Harvard. A former data analytics consultant, she plans to work as a data scientist in healthcare and is particularly passionate about studying health disparities and improving health care access and delivery for under-served communities. She is never far from a fun book and a cup of hot coffee.
