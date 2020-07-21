@@ -18,7 +18,6 @@ image:
   focal_point: ''
   preview_only: no
 projects: []
-draft: TRUE
 ---
 
 If you've ever taken a stats/econ/math class, the phrase "normal distribution" probably rings a bell for you (pun definitely intended). Also known as the bell curve, the probably density function of the normal distribution occurs often in society/nature/the world. There are about a million different defintions to describe this distribution on the world wide web but my favorite is a stats definition that describes the normal distribution as "a probability function that describes how the values of a variable are distributed. It is a symmetric distribution where most of the observations cluster around the central peak and the probabilities for values further away from the mean taper off equally in both directions" (<https://statisticsbyjim.com/basics/normal-distribution/>). This definition highlights that the function centers around the mean/average of the values and hence the highest point in the graph is the mean. 
