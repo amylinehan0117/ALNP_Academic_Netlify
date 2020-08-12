@@ -1,0 +1,44 @@
+---
+title: Removing Embedded Nulls with Bash
+author: Amy Linehan
+authors: ["alinehan"]
+date: '2020-07-31'
+slug: removing-embedded-nulls-with-bash
+categories:
+  - Other
+tags:
+  - Other
+  - bash
+subtitle: ''
+summary: ''
+lastmod: '2020-07-31T14:45:58-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+---
+
+In most cases, we can rely on R, Python or another programming language to clean and organize our data. In some instances, we may also need to utilize an OCR software or manual updates to prepare data for analysis. However, sometimes I've come across data that I can't read into R or Python accurately and can't find a free or available OCR software to extract the data into a more manageable format. In these cases, I have found Bash to be a reliable friend. 
+
+If you've never used bash before, for Windows users, I recommend downloading git bash: <https://gitforwindows.org/> . I also use Visual Studios code to write and review my scripts: <https://code.visualstudio.com/>. I am no bash expert and really only rely on it when I have no other option and/or am dealing with a large number of files and don't want to open each of them. As a result, this is just a quick overview to help you quickly understand how to set up and run some simple scripts in bash. For background on bash/more information I'd suggest our good friend Google or here: <https://www.atlassian.com/git/tutorials/git-bash#:~:text=Git%20Bash%20is%20an%20application,operating%20system%20through%20written%20commands.>; <https://en.wikipedia.org/wiki/Bash_(Unix_shell)> 
+
+
+# Set Working Directory 
+
+To set your working directory, use the function "cd" and the location. For example, to point 
+
+
+```{r echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("./static/img/20200731_Bash/cd_pic.PNG")
+```
+
+
+
+
+
+
+
+
+
