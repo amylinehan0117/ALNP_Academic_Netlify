@@ -24,17 +24,17 @@ author: alinehan
 
 In most cases, we can rely on R, Python or another programming language to clean and organize our data. In some instances, we may also need to utilize an OCR software or manual updates to prepare data for analysis. However, sometimes I've come across data that I can't read into R or Python accurately and can't find a free or available OCR software to extract the data into a more manageable format. In these cases, I have found Bash to be a reliable friend. 
 
-If you've never used bash before, for Windows users, I recommend downloading git bash: <https://gitforwindows.org/> . I also use Visual Studios code to write and review my scripts: <https://code.visualstudio.com/>. I am no bash expert and really only rely on it when I have no other option and/or am dealing with a large number of files and don't want to open each of them. As a result, this is just a quick overview to help you quickly understand how to set up and run some simple scripts in bash. For background on bash/more information I'd suggest our good friend Google, [here](<https://www.atlassian.com/git/tutorials/git-bash#:~:text=Git%20Bash%20is%20an%20application,operating%20system%20through%20written%20commands.>)  or [here] (<https://en.wikipedia.org/wiki/Bash_(Unix_shell)>). 
+If you've never used bash before, for Windows users, I recommend downloading git bash: <https://gitforwindows.org/> . I also use Visual Studios code to write and review my scripts: <https://code.visualstudio.com/>. I am no bash expert and really only rely on it when I have no other option and/or am dealing with a large number of files and don't want to open each of them. As a result, this is just a quick overview to help you quickly understand how to set up and run some simple scripts in bash. For background on bash/more information I'd suggest our good friend Google, [here](<https://www.atlassian.com/git/tutorials/git-bash#:~:text=Git%20Bash%20is%20an%20application,operating%20system%20through%20written%20commands.>)  or [here](<https://en.wikipedia.org/wiki/Bash_(Unix_shell)>). 
 
 
-# Set Working Directory 
+#### Set Working Directory 
 
-To set your working directory, use the function "cd" and the location. For example, to point to my documents folder, I would type *"C:\Users\alineha\Documents"* and then enter. 
+To set your working directory, use the function "cd" and the location. For example, to point to my documents folder, I would type ```"C:\Users\alineha\Documents"``` and then enter. 
 
 
-# Remove embedded nulls in files 
+#### Remove embedded nulls in files 
 
-An issue I have encountered a handful of times now is having data that i can't read into R because I get an embedded null error which breaks the import. To fix this issue without having to manually open each file, you can run the following query: 
+An issue I have encountered a handful of times now is having data that i can't read into R because I get an embedded null error which breaks the import. To fix this issue without having to manually open each file, you can run the following query which runs each file in the assigned working directory that has the provided extension (in this case .idx) through the provided code: 
 
 
 ```
@@ -52,9 +52,9 @@ done
   
 ```
 
-To run this query, I save it in visual studios in the working directory location (for example "query.txt") and then run it with the following command: "query.txt". Please note that the query above takes in .idx files (which is what i was working with), removes the embedded nulls and then exports them just as files. Then, i relied on the next query to convert them into CSVs.
+To run this query, I save it in visual studios in the working directory location (for example "query.txt") and then run it with the following command: "query.txt". Please note that the query above takes in .idx files (which is what i was working with), removes the embedded nulls and then exports them just as files. Then, I relied on the next query to convert them into CSVs.
 
-# Convert files into CSVs 
+#### Convert files into CSVs 
 
 Now that I've removed the embedded nulls, I want to transform the files into CSVs so they're easier to import into R/Python. I rely on the same general for loop format: 
 
@@ -77,7 +77,7 @@ The "mv" function takes the initial input and outputs it as a new data type - in
 
 At this point in my situation with the .idx files, I tried to read them into R and discovered that unix characters within the files were still causing problems. My knowledge of the various types of encoding and how it all works is super limited so I'm not going to dive into detail on why these characters popped up. All I am focused on here is to convert them into characters that can be read into R/Python. 
 
-# Convert Unix Characters into Readable Characters 
+#### Convert Unix Characters into Readable Characters 
 
 Similar to the previous two scripts, the code below runs a for-loop through the working directory set in the script. I have set up the for loop so it only runs through the CSVs in that directory. The for loop takes in a CSV file and replaces the unix characters. Then, it outputs the updated file as filename_clean as a CSV in the same directory: 
 
@@ -98,7 +98,7 @@ done
   
 ```
 
-
+As I've noted above, this is just some quick tricks that I've pulled from my various googling to solve quick problems to get client data into R or Python so we can run analyses. The great thing about working in 2020 is that the internet is often helpful in finding quick solutions and bash is no exception. If you think a problem you're facing could be solved with bash, a quick internet search will probably provide you with some good base code to get your hands dirty and hopefully get you started on solving the problem at hand. 
 
 
 
