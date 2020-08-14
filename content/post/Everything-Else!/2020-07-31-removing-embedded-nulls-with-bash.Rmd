@@ -75,7 +75,34 @@ done
 
 The "mv" function takes the initial input and outputs it as a new data type - in this case ".csv". 
 
-At this point in my situation with the .idx files, I tried to read them into R and discovered that unix characters within the files were still causing problems. My knowledge of the 
+At this point in my situation with the .idx files, I tried to read them into R and discovered that unix characters within the files were still causing problems. My knowledge of the various types of encoding and how it all works is super limited so I'm not going to dive into detail on why these characters popped up. All I am focused on here is to convert them into characters that can be read into R/Python. 
+
+# Convert Unix Characters into Readable Characters 
+
+Similar to the previous two scripts, the code below runs a for-loop through the working directory set in the script. I have set up the for loop so it only runs through the CSVs in that directory. The for loop takes in a CSV file and replaces the unix characters. Then, it outputs the updated file as filename_clean as a CSV in the same directory: 
+
+
+```
+ #!/bin/bash 
+$ chmod u+x bash_loop.txt
+
+ cd "C:\Users\alineha\Documents"
+
+ for filename in *.csv; do 
+
+tr -cd '\11\12\15\40-\176' < "$filename" > "${filename%.csv}_clean.csv" 
+  mv "${filename%.csv}_clean.csv"  $file
+
+
+done 
+  
+```
+
+
+
+
+
+
 
 
 
