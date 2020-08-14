@@ -1,6 +1,6 @@
 ---
 title: "Removing Embedded Nulls with Bash"
-author: "Amy Linehan"
+#author: "Amy Linehan"
 date: '2020-07-31'
 output:
   html_document:
@@ -19,7 +19,7 @@ summary: ''
 tags:
 - Other
 - bash
-authors: alinehan
+author: alinehan
 ---
 
 In most cases, we can rely on R, Python or another programming language to clean and organize our data. In some instances, we may also need to utilize an OCR software or manual updates to prepare data for analysis. However, sometimes I've come across data that I can't read into R or Python accurately and can't find a free or available OCR software to extract the data into a more manageable format. In these cases, I have found Bash to be a reliable friend. 
