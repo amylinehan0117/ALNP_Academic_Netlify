@@ -1,5 +1,5 @@
 ---
-title: "Removing Embedded Nulls with Bash"
+title: "Basics with Bash"
 #author: "Amy Linehan"
 date: '2020-07-31'
 output:
