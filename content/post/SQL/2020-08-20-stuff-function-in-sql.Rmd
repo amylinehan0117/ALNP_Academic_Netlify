@@ -1,0 +1,65 @@
+---
+title: 'Stuff Function in SQL '
+date: '2020-08-20'
+slug: stuff-function-in-sql
+categories:
+  - SQL
+tags:
+  - SQL
+subtitle: ''
+summary: ''
+lastmod: '2020-08-20T08:50:06-07:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: []
+author: alinehan
+authors: ["alinehan"]
+---
+
+The stuff function in SQL Server is probably one of my favorite functions I've worked with simply because of its name. The first time I heard of it I thought my collegue forgot the name of the function they used and said "stuff" as a placeholder. It was only when I actually saw their script that I realized it's a legit function. And wow what a cool function. It seems simple but is really a super useful and powerful function that can assist with string parsing in SQL.
+
+The STUFF() function deletes a given portion of a string and then inserts something else into the string (<https://www.w3schools.com/sql/func_sqlserver_stuff.asp>). The syntax is as follows:
+```
+STUFF(string, start, length, new_string)
+```
+The string parameter is the string that will be adjusted, start is the position to start deleting characters at, length is the number of characters to delete and new_string is the string that will inserted at the start position. Let's look at a quick example that replaces "hello" with "hi" in a text string: 
+
+```{r, include=F}
+library(DBI)
+db = dbConnect(odbc::odbc(), 
+               Driver = "SQL Server",
+               Server = "LAALINEHAN\\SQLEXPRESS01",
+               Database = "master",
+               Trusted_connection = "True")
+```
+
+
+```{sql, connection = db}
+select STUFF('hello have a good day' , 
+             1, 
+             5,
+             'hi')
+
+```
+
+The previous example expects us to know the location and length of the phrase/characters we want to replace. However, below, we can rely on the charindex function within the stuff function for the vast majorty of situations where we don't know those parameters or we're operating with a field of data with varying parameters for each input value. Charindex returns the location of an inputted substring in a string. It has the following syntax: CHARINDEX(SUBSTRING, string, [start location]). The start location is where the search for the substring will start within the string and is defaulted to 1. 
+
+Here is how we can use stuff and charindex together to pull or update sections of a string when we don't know the index or the index changes across records in the data.: 
+
+```{sql, connection = db}
+DECLARE @STRING AS VARCHAR(100)
+SET @STRING = 'hello have a good day. How is your day so far?'
+
+
+select STUFF(@STRING , 
+             CHARINDEX('day', @string, charindex('day',@string,1) + 1) , 
+             3,
+             'morning')
+```
+
+The example above also relies on a variable that stores the string I'm working with. This is just a personal preference to keep the code compact - you can just as easily replace the "@string" section of the function parameters with the full string listed out. 
+
+
